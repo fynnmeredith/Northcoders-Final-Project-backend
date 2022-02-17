@@ -1,1 +1,3 @@
-export {}
+import { subgoalData } from './subgoals'
+
+export { subgoalData }
