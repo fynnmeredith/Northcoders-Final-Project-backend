@@ -17,7 +17,7 @@ const commentData = [
         post_id:5,
         message:'Climb Climb Climb',
         owner: 'betty',
-        datetime:new Date(-29)
+        datetime:new Date().setDate(-29)
     },
     {
         post_id:3,

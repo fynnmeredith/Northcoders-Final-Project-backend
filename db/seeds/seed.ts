@@ -21,36 +21,35 @@ const seed = (data) => {
     friendshipData,
   } = data;
 
-  return (
-    db
-      .query("DROP TABLE IF EXISTS friendships;")
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS reactions;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS comments;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS posts;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS subgoals;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS goals;");
-      })
-      .then(() => {
-        return db.query("DROP TABLE IF EXISTS users;");
-      })
-      .then(() => {
-        return db.query(`
+  return db
+    .query("DROP TABLE IF EXISTS friendships;")
+    .then(() => {
+      return db.query("DROP TABLE IF EXISTS reactions;");
+    })
+    .then(() => {
+      return db.query("DROP TABLE IF EXISTS comments;");
+    })
+    .then(() => {
+      return db.query("DROP TABLE IF EXISTS posts;");
+    })
+    .then(() => {
+      return db.query("DROP TABLE IF EXISTS subgoals;");
+    })
+    .then(() => {
+      return db.query("DROP TABLE IF EXISTS goals;");
+    })
+    .then(() => {
+      return db.query("DROP TABLE IF EXISTS users;");
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE users (
         username VARCHAR(25) PRIMARY KEY,
         profile VARCHAR(300)
       );`);
-      })
-      .then(() => {
-        return db.query(`
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE goals (
         goal_id SERIAL PRIMARY KEY,
         objective VARCHAR(200) NOT NULL,
@@ -67,9 +66,9 @@ const seed = (data) => {
         FOREIGN KEY (owner)
         REFERENCES users(username)
       );`);
-      })
-      .then(() => {
-        return db.query(`
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE subgoals (
         subgoal_id SERIAL PRIMARY KEY,
         goal_id INTEGER NOT NULL,
@@ -88,9 +87,9 @@ const seed = (data) => {
         FOREIGN KEY (goal_id)
         REFERENCES goals(goal_id)
       );`);
-      })
-      .then(() => {
-        return db.query(`
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE posts (
         post_id SERIAL PRIMARY KEY,
         associated_data_type VARCHAR(10) NOT NULL,
@@ -101,9 +100,9 @@ const seed = (data) => {
         FOREIGN KEY (owner)
         REFERENCES users(username)
       );`);
-      })
-      .then(() => {
-        return db.query(`
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE comments (
         comment_id SERIAL PRIMARY KEY,
         post_id INTEGER NOT NULL,
@@ -115,9 +114,9 @@ const seed = (data) => {
         FOREIGN KEY (owner)
         REFERENCES users(username)
       );`);
-      })
-      .then(() => {
-        return db.query(`
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE reactions (
         reaction_id SERIAL PRIMARY KEY,
         post_id INTEGER NOT NULL,
@@ -128,87 +127,85 @@ const seed = (data) => {
         FOREIGN KEY (owner)
         REFERENCES users(username)
       );`);
-      })
-      .then(() => {
-        return db.query(`
+    })
+    .then(() => {
+      return db.query(`
       CREATE TABLE friendships (
         friendship_id SERIAL PRIMARY KEY,
         user_1 VARCHAR(25) NOT NULL,
         user_2 VARCHAR(25) NOT NULL
       );`);
-      })
-      .then(() => {
-        const query = format(
-          `INSERT INTO users
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO users
           (username, profile)
           VALUES
           %L;`,
-          formatUsers(userData)
-        );
-        return db.query(query);
-      })
-      .then(() => {
-        const query = format(
-          `INSERT INTO goals
+        formatUsers(userData)
+      );
+      return db.query(query);
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO goals
           (objective, description, start_date, end_date, type, status, owner, target_value, unit, progress, finish_date)
           VALUES
           %L;`,
-          formatGoals(goalData)
-        );
-        return db.query(query);
-      })
-      .then(() => {
-        const query = format(
-          `INSERT INTO subgoals
+        formatGoals(goalData)
+      );
+      return db.query(query);
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO subgoals
           (goal_id, objective, start_date, end_date, type, status, owner, target_value, unit, progress, finish_date)
           VALUES
           %L;`,
-          formatSubgoals(subgoalData)
-        );
-        return db.query(query);
-      })
-      // RE-ENTER DATETIMES
-      .then(() => {
-        const query = format(
-          `INSERT INTO posts
-          (associated_data_type, associated_id, owner, message)
+        formatSubgoals(subgoalData)
+      );
+      return db.query(query);
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO posts
+          (associated_data_type, associated_id, owner, datetime, message)
           VALUES
           %L;`,
-          formatPosts(postData)
-        );
-        return db.query(query);
-      })
-      .then(() => {
-        const query = format(
-          `INSERT INTO comments
-          (post_id, owner, message)
+        formatPosts(postData)
+      );
+      return db.query(query);
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO comments
+          (post_id, owner, message, datetime)
           VALUES
           %L;`,
-          formatComments(commentData)
-        );
-        return db.query(query);
-      })
-      .then(() => {
-        const query = format(
-          `INSERT INTO reactions
+        formatComments(commentData)
+      );
+      return db.query(query);
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO reactions
           (post_id, owner, reaction)
           VALUES
           %L;`,
-          formatReactions(reactionData)
-        );
-        return db.query(query);
-      })
-      .then(() => {
-        const query = format(
-          `INSERT INTO friendships
+        formatReactions(reactionData)
+      );
+      return db.query(query);
+    })
+    .then(() => {
+      const query = format(
+        `INSERT INTO friendships
           (user_1, user_2)
           VALUES
           %L;`,
-          formatFriendships(friendshipData)
-        );
-        return db.query(query);
-      })
-  );
+        formatFriendships(friendshipData)
+      );
+      return db.query(query);
+    });
 };
 
 export { seed };
