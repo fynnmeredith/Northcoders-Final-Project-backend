@@ -31,5 +31,11 @@
         post_id:1,
         owner:'You can do it',
         reaction:'Like'
+    },
+    {
+        reaction_id:1,
+        post_id:1,
+        owner:'Pushtest',
+        reaction:'pushtest'
     }
 ]
