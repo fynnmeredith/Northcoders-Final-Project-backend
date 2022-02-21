@@ -15,6 +15,8 @@ describe('', () => {
     
             return db.query(`SELECT * FROM subgoals;`)
                 .then((res) => {
+
+                    console.log(res.rows)
     
                     expect(res.rows.length).toBe(8)
     
@@ -26,9 +28,11 @@ describe('', () => {
                             subgoal_id: expect.any(Number),
                             goal_id: expect.any(Number),
                             objective: expect.any(String),
+                            end_date: expect.any(Date),
                             type: expect.any(String), 
                             status: expect.any(String), 
-                            owner: expect.any(String),    
+                            owner: expect.any(String)
+
                         })
                         )
     

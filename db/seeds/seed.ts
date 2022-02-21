@@ -1,5 +1,5 @@
 import { db } from "../connection"
-import * as format from "pg-format"
+import format from "pg-format"
 import { formatSubgoals } from '../../utils/format'
 
 const seed = (data) => {
@@ -14,22 +14,25 @@ const seed = (data) => {
         subgoal_id SERIAL PRIMARY KEY,
         goal_id INTEGER NOT NULL,
         objective VARCHAR(100) NOT NULL,
+        start_date DATE,
+        end_date DATE NOT NULL,
         type VARCHAR(15) NOT NULL,
         status VARCHAR(15) NOT NULL,
         owner VARCHAR(25) NOT NULL,
         target_value DECIMAL,
-        unit VARCHAR(15)
+        unit VARCHAR(15),
+        progress JSONB
       );`)
     })
     .then(() => {
-      const query = format.default(
+      const query = format(
         `INSERT INTO subgoals
-          (goal_id, objective, type, status, owner, target_value, unit)
+          (goal_id, objective, start_date, end_date, type, status, owner, target_value, unit, progress)
           VALUES
           %L;`,
         formatSubgoals(subgoalData)
       );
-
+      console.log(query)
       return db.query(query);
     })
     

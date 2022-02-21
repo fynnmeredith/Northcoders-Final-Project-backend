@@ -1,7 +1,6 @@
-import * as express from "express"
-import * as cors from 'cors'
+import express from "express"
+import cors from 'cors'
 const app = express()
-
 
 app.use(express.json())
 
