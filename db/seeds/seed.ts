@@ -1,31 +1,52 @@
-import { db } from "../connection"
-import format from "pg-format"
-import { formatUsers, formatGoals, formatSubgoals, formatPosts, formatComments, formatReactions, formatFriendships } from '../../utils/format'
+import { db } from "../connection";
+import format from "pg-format";
+import {
+  formatUsers,
+  formatGoals,
+  formatSubgoals,
+  formatPosts,
+  formatComments,
+  formatReactions,
+  formatFriendships,
+} from "../../utils/format";
 
 const seed = (data) => {
+  const {
+    userData,
+    goalData,
+    subgoalData,
+    postData,
+    commentData,
+    reactionData,
+    friendshipData,
+  } = data;
 
-  const { userData, goalData, subgoalData, postData, commentData, reactionData, friendshipData } = data
-  
   return db
-    .query('DROP TABLE IF EXISTS friendships;')
+    .query("DROP TABLE IF EXISTS friendships;")
     .then(() => {
-      return db.query('DROP TABLE IF EXISTS reactions;')})
+      return db.query("DROP TABLE IF EXISTS reactions;");
+    })
     .then(() => {
-      return db.query('DROP TABLE IF EXISTS comments;')})
+      return db.query("DROP TABLE IF EXISTS comments;");
+    })
     .then(() => {
-      return db.query('DROP TABLE IF EXISTS posts;')})
+      return db.query("DROP TABLE IF EXISTS posts;");
+    })
     .then(() => {
-      return db.query('DROP TABLE IF EXISTS subgoals;')})
+      return db.query("DROP TABLE IF EXISTS subgoals;");
+    })
     .then(() => {
-      return db.query('DROP TABLE IF EXISTS goals;')})
+      return db.query("DROP TABLE IF EXISTS goals;");
+    })
     .then(() => {
-      return db.query('DROP TABLE IF EXISTS users;')})
+      return db.query("DROP TABLE IF EXISTS users;");
+    })
     .then(() => {
       return db.query(`
       CREATE TABLE users (
         username VARCHAR(25) PRIMARY KEY,
         profile VARCHAR(300)
-      );`)
+      );`);
     })
     .then(() => {
       return db.query(`
@@ -44,7 +65,7 @@ const seed = (data) => {
         finish_date DATE,
         FOREIGN KEY (owner)
         REFERENCES users(username)
-      );`)
+      );`);
     })
     .then(() => {
       return db.query(`
@@ -65,7 +86,7 @@ const seed = (data) => {
         REFERENCES users(username),
         FOREIGN KEY (goal_id)
         REFERENCES goals(goal_id)
-      );`)
+      );`);
     })
     .then(() => {
       return db.query(`
@@ -78,7 +99,7 @@ const seed = (data) => {
         message VARCHAR(2000),
         FOREIGN KEY (owner)
         REFERENCES users(username)
-      );`)
+      );`);
     })
     .then(() => {
       return db.query(`
@@ -92,7 +113,7 @@ const seed = (data) => {
         REFERENCES posts(post_id),
         FOREIGN KEY (owner)
         REFERENCES users(username)
-      );`)
+      );`);
     })
     .then(() => {
       return db.query(`
@@ -105,7 +126,7 @@ const seed = (data) => {
         REFERENCES posts(post_id),
         FOREIGN KEY (owner)
         REFERENCES users(username)
-      );`)
+      );`);
     })
     .then(() => {
       return db.query(`
@@ -113,7 +134,7 @@ const seed = (data) => {
         friendship_id SERIAL PRIMARY KEY,
         user_1 VARCHAR(25) NOT NULL,
         user_2 VARCHAR(25) NOT NULL
-      );`)
+      );`);
     })
     .then(() => {
       const query = format(
@@ -145,11 +166,10 @@ const seed = (data) => {
       );
       return db.query(query);
     })
-    // RE-ENTER DATETIMES
     .then(() => {
       const query = format(
         `INSERT INTO posts
-          (associated_data_type, associated_id, owner, message)
+          (associated_data_type, associated_id, owner, datetime, message)
           VALUES
           %L;`,
         formatPosts(postData)
@@ -159,7 +179,7 @@ const seed = (data) => {
     .then(() => {
       const query = format(
         `INSERT INTO comments
-          (post_id, owner, message)
+          (post_id, owner, message, datetime)
           VALUES
           %L;`,
         formatComments(commentData)
@@ -185,8 +205,7 @@ const seed = (data) => {
         formatFriendships(friendshipData)
       );
       return db.query(query);
-    })
-    
+    });
 };
 
-export { seed }
+export { seed };

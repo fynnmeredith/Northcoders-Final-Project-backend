@@ -46,15 +46,18 @@ const formatPosts = (posts) => {
       post.associated_data_type,
       post.associated_id,
       post.owner,
-      // post.datetime,
+      formatDatetime(post.datetime),
       post.message,
     ];
   });
 };
 const formatComments = (comments) => {
   return comments.map((comment) => {
-    return [comment.post_id, comment.owner, comment.message, 
-      // comment.datetime
+    return [
+      comment.post_id,
+      comment.owner,
+      comment.message,
+      formatDatetime(comment.datetime),
     ];
   });
 };
@@ -75,6 +78,8 @@ const formatDate = (date: Date | undefined): String | undefined => {
     return undefined;
   }
 
+  date = new Date(date);
+
   const year = date.getFullYear().toString();
   let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();
@@ -89,9 +94,46 @@ const formatDate = (date: Date | undefined): String | undefined => {
 
   const formattedDate = year + "-" + month + "-" + day;
 
-  console.log(formattedDate);
-
   return formattedDate;
+};
+
+const formatDatetime = (datetime: Date | undefined): String | undefined => {
+  if (!datetime) {
+    return undefined;
+  }
+
+  datetime = new Date(datetime);
+
+  const year = datetime.getFullYear().toString();
+  let month = (datetime.getMonth() + 1).toString();
+  let day = datetime.getDate().toString();
+
+  let hour = datetime.getHours().toString();
+  let minute = datetime.getMinutes().toString();
+  let second = datetime.getSeconds().toString();
+
+  if (month.length === 1) {
+    month = "0" + month;
+  }
+
+  if (day.length === 1) {
+    day = "0" + day;
+  }
+
+  if (hour.length === 1) {
+    hour = "0" + hour;
+  }
+
+  if (minute.length === 1) {
+    minute = "0" + minute;
+  }
+
+  if (second.length === 1) {
+    second = "0" + second;
+  }
+
+  const formattedDatetime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  return formattedDatetime;
 };
 
 export {
