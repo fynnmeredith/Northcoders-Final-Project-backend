@@ -1,3 +1,4 @@
+import e from "cors";
 import {
   insertGoal,
   deleteGoalFrom,
@@ -12,15 +13,17 @@ const postGoal = (req, res, next) => {};
 const deleteGoal = (req, res, next) => {};
 
 const getGoalByGoalId = (req, res, next) => {
-  const goal_id: Number = req.params.goal_id;
-  if (typeof goal_id !== "number") {
+  const goal_id = req.params.goal_id;
+
+  if (!Number.isInteger(parseInt(goal_id))) {
     next({ status: 400, message: "Bad request" });
+  } else {
+    return selectGoalByGoalId(goal_id)
+      .then((goal) => {
+        res.status(200).send({ goal });
+      })
+      .catch(next);
   }
-  return selectGoalByGoalId(goal_id)
-    .then((goal) => {
-      return { goal };
-    })
-    .catch(next);
 };
 
 const patchGoalDetails = (req, res, next) => {};

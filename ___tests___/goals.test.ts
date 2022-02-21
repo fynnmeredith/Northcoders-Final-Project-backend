@@ -5,8 +5,6 @@ import { app } from "../app";
 import request from "supertest";
 import {} from "ts-jest";
 
-console.log(testData);
-
 beforeEach(() => seed(testData));
 
 describe("/api/goals", () => {
@@ -27,14 +25,15 @@ describe("/api/goals/:goal_id", () => {
             goal_id: 3,
             objective: "Save £800",
             description: "Save for holiday",
-            start_date: new Date(2022, 0, 7),
-            end_date: new Date(2022, 4, 6),
+            start_date: "2022-01-07T00:00:00.000Z",
+            end_date: "2022-05-05T23:00:00.000Z",
             type: "progress",
             status: "active",
             owner: "mary",
-            target_value: 800,
+            target_value: "800",
             unit: "£",
-            progress: [[new Date(2022, 0, 29), 200]],
+            progress: [["2022-01-29T00:00:00.000Z", 200]],
+            finish_date: null,
           };
           expect(goal).toEqual(expectedGoal);
         });
@@ -45,16 +44,16 @@ describe("/api/goals/:goal_id", () => {
         .get("/api/goals/three")
         .expect(400)
         .then((res) => {
-          expect(res.message).toBe("Bad request");
+          expect(res.body.message).toBe("Bad request");
         });
     });
 
     test("returns error when non-existent goal_id is input", () => {
       return request(app)
-        .get("/api/goals/three")
+        .get("/api/goals/9999")
         .expect(404)
         .then((res) => {
-          expect(res.message).toBe("Goal not found");
+          expect(res.body.message).toBe("Goal not found");
         });
     });
   });
