@@ -1,34 +1,36 @@
 //jeff,susan,mary,stuart,mahood,martina,dmitri,betty
 
-[
+const commentData = [
     {
-        comment_id:1,
         post_id:1,
         message:'You can do it',
+        owner: 'mahmood',
         datetime:new Date().setDate(-1)
     },
     {
-        comment_id:2,
         post_id:1,
         message:'Keep on strumming',
+        owner: 'mary',
         datetime:new Date()
     },
     {
-        comment_id:3,
         post_id:5,
         message:'Climb Climb Climb',
+        owner: 'betty',
         datetime:new Date(-29)
     },
     {
-        comment_id:4,
         post_id:3,
         message:'Knit knit knit',
+        owner: 'jeff',
         datetime:new Date()
     },
     {
-        comment_id:5,
         post_id:2,
         message:'Play guitar baby',
+        owner: 'martina',
         datetime:new Date()
     }
 ]
+
+export { commentData }

@@ -1,35 +1,32 @@
 //jeff,susan,mary,stuart,mahood,martina,dmitri,betty
 
 
-[
+const reactionData = [
     {
-        reaction_id:1,
         post_id:1,
         owner:'susan',
         reaction:'Like'
     },
     {
-        reaction_id:2,
         post_id:1,
         owner:'mary',
         reaction:'Dislike'
     },
     {
-        reaction_id:3,
         post_id:1,
-        owner:'mahood',
+        owner:'mahmood',
         reaction:'Star'
     },
     {
-        reaction_id:4,
         post_id:5,
         owner:'martina',
         reaction:'Like'
     },
     {
-        reaction_id:5,
         post_id:5,
         owner:'jeff',
         reaction:'Like'
     }
 ]
+
+export { reactionData }

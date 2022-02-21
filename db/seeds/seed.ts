@@ -76,7 +76,7 @@ const seed = (data) => {
         owner VARCHAR(25) NOT NULL,
         datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         message VARCHAR(2000),
-        FOREIGN KEY owner
+        FOREIGN KEY (owner)
         REFERENCES users(username)
       );`)
     })
@@ -88,9 +88,9 @@ const seed = (data) => {
         owner VARCHAR(25) NOT NULL,
         message VARCHAR(1000) NOT NULL,
         datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY post_id
+        FOREIGN KEY (post_id)
         REFERENCES posts(post_id),
-        FOREIGN KEY owner
+        FOREIGN KEY (owner)
         REFERENCES users(username)
       );`)
     })
@@ -101,18 +101,18 @@ const seed = (data) => {
         post_id INTEGER NOT NULL,
         owner VARCHAR(25) NOT NULL,
         reaction VARCHAR(15) NOT NULL,
-        FOREIGN KEY post_id
+        FOREIGN KEY (post_id)
         REFERENCES posts(post_id),
-        FOREIGN KEY owner
+        FOREIGN KEY (owner)
         REFERENCES users(username)
       );`)
     })
     .then(() => {
       return db.query(`
-      CREATE TABLE freindships (
+      CREATE TABLE friendships (
         friendship_id SERIAL PRIMARY KEY,
-        user_1 INTEGER NOT NULL,
-        user_2, INTEGER NOT NULL
+        user_1 VARCHAR(25) NOT NULL,
+        user_2 VARCHAR(25) NOT NULL
       );`)
     })
     .then(() => {
@@ -145,10 +145,11 @@ const seed = (data) => {
       );
       return db.query(query);
     })
+    // RE-ENTER DATETIMES
     .then(() => {
       const query = format(
         `INSERT INTO posts
-          (associated_data_type, associated_id, owner, datetime, message)
+          (associated_data_type, associated_id, owner, message)
           VALUES
           %L;`,
         formatPosts(postData)
@@ -158,7 +159,7 @@ const seed = (data) => {
     .then(() => {
       const query = format(
         `INSERT INTO comments
-          (post_id, owner, message, datetime)
+          (post_id, owner, message)
           VALUES
           %L;`,
         formatComments(commentData)

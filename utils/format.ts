@@ -1,4 +1,3 @@
-
 const formatUsers = (users) => {
   return users.map((user) => {
     return [user.username, user.profile];
@@ -9,6 +8,7 @@ const formatGoals = (goals) => {
   return goals.map((goal) => {
     return [
       goal.objective,
+      goal.description,
       formatDate(goal.start_date),
       formatDate(goal.end_date),
       goal.type,
@@ -42,34 +42,31 @@ const formatSubgoals = (subgoals) => {
 
 const formatPosts = (posts) => {
   return posts.map((post) => {
-    return [post.comment_id, post.post_id, post.owner, post.message];
+    return [
+      post.associated_data_type,
+      post.associated_id,
+      post.owner,
+      // post.datetime,
+      post.message,
+    ];
   });
 };
 const formatComments = (comments) => {
   return comments.map((comment) => {
-    return [
-      comment.comment_id,
-      comment.post_id,
-      comment.owner,
-      comment.message,
-      comment.datetime,
+    return [comment.post_id, comment.owner, comment.message, 
+      // comment.datetime
     ];
   });
 };
 const formatReactions = (reactions) => {
   return reactions.map((reaction) => {
-    return [
-      reaction.reaction_id,
-      reaction.post_id,
-      reaction.owner,
-      reaction.reaction,
-    ];
+    return [reaction.post_id, reaction.owner, reaction.reaction];
   });
 };
 
 const formatFriendships = (friendships) => {
   return friendships.map((friendship) => {
-    return [friendship.reaction_id, friendship.user_1, friendship.user_2];
+    return [friendship.user_1, friendship.user_2];
   });
 };
 
