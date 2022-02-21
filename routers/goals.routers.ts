@@ -1,12 +1,21 @@
-const express = require("express");
+import express from "express";
 
-const {
-  getCategories,
-  postCategory,
-} = require("../controllers/categories.controller.js");
+import {
+  postGoal,
+  deleteGoal,
+  getGoalByGoalId,
+  patchGoalDetails,
+  patchGoalProgress,
+} from "../controllers/goals.controller";
 
-const categoryRouter = express.Router();
+const goalRouter = express.Router();
 
-categoryRouter.route("/").get(getCategories).post(postCategory);
+goalRouter.post("/", postGoal);
 
-module.exports = categoryRouter;
+goalRouter.route("/:goal_id").delete(deleteGoal).get(getGoalByGoalId);
+
+goalRouter.patch("/:goal_id/details", patchGoalDetails);
+
+goalRouter.patch("/:goal_id/progress", patchGoalProgress);
+
+export { goalRouter };
