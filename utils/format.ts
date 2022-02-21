@@ -12,7 +12,7 @@ const formatGoals = ( goals ) => {
 
     return goals.map((goal) => {
 
-        return [ goal.objective, formatDate(goal.start_date), formatDate(goal.end_date), goal.type, goal.status, goal.owner, goal.target_value, goal.unit, JSON.stringify(goal.progress), formatDate(goal.finish_date) ]
+        return [ goal.objective, goal.description, formatDate(goal.start_date), formatDate(goal.end_date), goal.type, goal.status, goal.owner, goal.target_value, goal.unit, JSON.stringify(goal.progress), formatDate(goal.finish_date) ]
 
     })
 
