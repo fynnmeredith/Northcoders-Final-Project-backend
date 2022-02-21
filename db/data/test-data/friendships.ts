@@ -2,10 +2,10 @@
 // jeff:susan,mary,stuart,betty
 // susan:mary, jeff
 // stuart: jeff, mary
-// mahood: mary
+// mahood: mary,dmitri
 // martina: dmitri
-// dmitri: martina
-// betty: jeff
+// dmitri: martina,betty,mahood
+// betty: jeff,dimitri
 
 const friendshipData = [
     {
@@ -38,6 +38,14 @@ const friendshipData = [
     },
     {
         user_1:'martina',
+        user_2:'dmitri'
+    },
+    {
+        user_1:'betty',
+        user_2:'dmitri'
+    },
+    {
+        user_1:'mahood',
         user_2:'dmitri'
     }
 ]
