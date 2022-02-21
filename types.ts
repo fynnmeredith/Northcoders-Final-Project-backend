@@ -34,4 +34,9 @@ interface Subgoal {
   finish_date?: Date;
 }
 
-export { User, Goal, Subgoal };
+interface CustomError {
+  status: Number;
+  message: String;
+}
+
+export { CustomError, User, Goal, Subgoal };

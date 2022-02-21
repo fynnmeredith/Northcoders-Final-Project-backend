@@ -11,7 +11,17 @@ const postGoal = (req, res, next) => {};
 
 const deleteGoal = (req, res, next) => {};
 
-const getGoalByGoalId = (req, res, next) => {};
+const getGoalByGoalId = (req, res, next) => {
+  const goal_id: Number = req.params.goal_id;
+  if (typeof goal_id !== "number") {
+    next({ status: 400, message: "Bad request" });
+  }
+  return selectGoalByGoalId(goal_id)
+    .then((goal) => {
+      return { goal };
+    })
+    .catch(next);
+};
 
 const patchGoalDetails = (req, res, next) => {};
 

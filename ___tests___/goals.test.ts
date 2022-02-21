@@ -5,6 +5,8 @@ import { app } from "../app";
 import request from "supertest";
 import {} from "ts-jest";
 
+console.log(testData);
+
 beforeEach(() => seed(testData));
 
 describe("/api/goals", () => {
