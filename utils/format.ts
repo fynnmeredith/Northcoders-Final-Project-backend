@@ -1,3 +1,4 @@
+
 const formatUsers = (users) => {
   return users.map((user) => {
     return [user.username, user.profile];
