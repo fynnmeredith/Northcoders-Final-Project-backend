@@ -9,7 +9,8 @@ const subgoalData = [
     owner: 'jeff',
     target_value: 30,
     unit: 'km',
-    progress: [[new Date(2022, 1, 8), 10], [new Date(2022, 1, 8), 20], [new Date(2022, 1, 10), 30]]
+    progress: [[new Date(2022, 1, 8), 10], [new Date(2022, 1, 8), 20], [new Date(2022, 1, 10), 30]],
+    finish_date: new Date(2022, 1, 10)
   },
   {
     goal_id: 1,
@@ -52,8 +53,9 @@ const subgoalData = [
     objective: "Finish Act 1 of novella",
     end_date: new Date(2022, 1, 11),
     type: 'boolean',
-    status: 'active',
-    owner: 'jeff'
+    status: 'completed',
+    owner: 'jeff',
+    finish_date: new Date(2022, 1, 10)
   },
   {
     goal_id: 2,
@@ -78,7 +80,64 @@ const subgoalData = [
     type: 'boolean',
     status: 'active',
     owner: 'jeff'
-  }        
+  },
+  {
+    goal_id: 3,
+    objective: "Save £200",
+    start_date: new Date(2022, 0, 7),
+    end_date: new Date(2022, 1, 6),
+    type: 'progress',
+    status: 'completed',
+    owner: 'mary',
+    target_value: 200,
+    unit: '£',
+    progress: [[new Date(2022, 0, 29), 200]],
+    finish_date: new Date(2022, 0, 29)
+  },
+  {
+    goal_id: 3,
+    objective: "Save £200",
+    start_date: new Date(2022, 1, 7),
+    end_date: new Date(2022, 2, 6),
+    type: 'progress',
+    status: 'active',
+    owner: 'mary',
+    target_value: 200,
+    unit: '£',
+    progress: []
+  },
+  {
+    goal_id: 3,
+    objective: "Save £200",
+    start_date: new Date(2022, 2, 7),
+    end_date: new Date(2022, 3, 6),
+    type: 'progress',
+    status: 'active',
+    owner: 'mary',
+    target_value: 200,
+    unit: '£',
+    progress: []
+  },
+  {
+    goal_id: 3,
+    objective: "Save £200",
+    start_date: new Date(2022, 3, 7),
+    end_date: new Date(2022, 4, 6),
+    type: 'progress',
+    status: 'active',
+    owner: 'mary',
+    target_value: 200,
+    unit: '£',
+    progress: []
+  },
+  {
+    goal_id: 4,
+    objective: "Paint bedroom walls",
+    end_date: new Date(2022, 1, 28),
+    type: 'boolean',
+    status: 'active',
+    owner: 'mahmood'
+  }           
 ]
 
 export {subgoalData}

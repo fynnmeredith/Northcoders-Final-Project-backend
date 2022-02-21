@@ -1,3 +1,5 @@
+import { userData } from './users'
+import { goalData } from './goals'
 import { subgoalData } from './subgoals'
 
-export { subgoalData }
+export { userData, goalData, subgoalData }
