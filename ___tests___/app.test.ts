@@ -1,219 +1,139 @@
-import { db } from '../db/connection'
-import * as testData from '../db/data/test-data/index'
-import { seed } from '../db/seeds/seed'
-import { app } from '../app'
-import * as request from 'supertest'
-import {} from 'ts-jest'
-import exp from 'constants'
+import { db } from "../db/connection";
+import * as testData from "../db/data/test-data/index";
+import { seed } from "../db/seeds/seed";
+import { app } from "../app";
+import * as request from "supertest";
+import {} from "ts-jest";
+import exp from "constants";
 
-beforeEach(() => seed(testData))
+beforeEach(() => seed(testData));
 
-describe('', () => {
+describe("", () => {
+  describe("seed works correctly", () => {
+    test("subgoals table correctly seeded", () => {
+      return db.query(`SELECT * FROM subgoals;`).then((res) => {
+        expect(res.rows.length).toBe(13);
 
-    describe('seed works correctly', () => {
+        res.rows.forEach((subgoal) => {
+          expect(subgoal).toEqual(
+            expect.objectContaining({
+              subgoal_id: expect.any(Number),
+              goal_id: expect.any(Number),
+              objective: expect.any(String),
+              end_date: expect.any(Date),
+              type: expect.any(String),
+              status: expect.any(String),
+              owner: expect.any(String),
+            })
+          );
+        });
+      });
+    });
 
-        test('subgoals table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM subgoals;`)
-                .then((res) => {
+    test("goals table correctly seeded", () => {
+      return db.query(`SELECT * FROM goals;`).then((res) => {
+        expect(res.rows.length).toBe(7);
 
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(8)
-    
-                    res.rows.forEach((subgoal) => {
-    
-                        expect(subgoal).toEqual(
-                        expect.objectContaining({
-    
-                            subgoal_id: expect.any(Number),
-                            goal_id: expect.any(Number),
-                            objective: expect.any(String),
-                            end_date: expect.any(Date),
-                            type: expect.any(String), 
-                            status: expect.any(String), 
-                            owner: expect.any(String)
+        res.rows.forEach((goal) => {
+          expect(goal).toEqual(
+            expect.objectContaining({
+              goal_id: expect.any(Number),
+              objective: expect.any(String),
+              description: expect.any(String),
+              end_date: expect.any(Date),
+              type: expect.any(String),
+              status: expect.any(String),
+              owner: expect.any(String),
+            })
+          );
+        });
+      });
+    });
 
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
-    
-        test('goals table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM goals;`)
-                .then((res) => {
+    test("users table correctly seeded", () => {
+      return db.query(`SELECT * FROM users;`).then((res) => {
+        expect(res.rows.length).toBe(8);
 
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(7)
-    
-                    res.rows.forEach((goal) => {
-    
-                        expect(goal).toEqual(
-                        expect.objectContaining({
-    
-                            goal_id: expect.any(Number),
-                            objective: expect.any(String),
-                            description: expect.any(String),
-                            end_date: expect.any(Date),
-                            type: expect.any(String),
-                            status: expect.any(String),
-                            owner: expect.any(String)
+        res.rows.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              profile: expect.any(String),
+            })
+          );
+        });
+      });
+    });
 
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
+    test("posts table correctly seeded", () => {
+      return db.query(`SELECT * FROM posts;`).then((res) => {
+        expect(res.rows.length).toBe(5);
 
-        test('users table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM users;`)
-                .then((res) => {
+        res.rows.forEach((post) => {
+          expect(post).toEqual(
+            expect.objectContaining({
+              post_id: expect.any(Number),
+              associated_data_type: expect.any(String),
+              associated_id: expect.any(Number),
+              owner: expect.any(String),
+              datetime: expect.any(Date),
+            })
+          );
+        });
+      });
+    });
 
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(8)
-    
-                    res.rows.forEach((user) => {
-    
-                        expect(user).toEqual(
-                        expect.objectContaining({
-    
-                            username: expect.any(String),
-                            profile: expect.any(String),
+    test("comments table correctly seeded", () => {
+      return db.query(`SELECT * FROM comments;`).then((res) => {
+        expect(res.rows.length).toBe(5);
 
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
+        res.rows.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              post_id: expect.any(Number),
+              owner: expect.any(String),
+              message: expect.any(String),
+              datetime: expect.any(Date),
+            })
+          );
+        });
+      });
+    });
 
-        test('posts table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM posts;`)
-                .then((res) => {
+    test("reactions table correctly seeded", () => {
+      return db.query(`SELECT * FROM reactions;`).then((res) => {
+        expect(res.rows.length).toBe(5);
 
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(5)
-    
-                    res.rows.forEach((post) => {
-    
-                        expect(post).toEqual(
-                        expect.objectContaining({
-    
-                            post_id: expect.any(Number),
-                            associated_data_type: expect.any(String),
-                            associated_id: expect.any(Number),
-                            owner: expect.any(String),
-                            datetime: expect.any(Date),
+        res.rows.forEach((reaction) => {
+          expect(reaction).toEqual(
+            expect.objectContaining({
+              reaction_id: expect.any(Number),
+              post_id: expect.any(Number),
+              owner: expect.any(String),
+              reaction: expect.any(String),
+            })
+          );
+        });
+      });
+    });
 
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
+    test("friendships table correctly seeded", () => {
+      return db.query(`SELECT * FROM friendships;`).then((res) => {
+        expect(res.rows.length).toBe(10);
 
-        test('comments table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM comments;`)
-                .then((res) => {
+        res.rows.forEach((friendship) => {
+          expect(friendship).toEqual(
+            expect.objectContaining({
+              friendship_id: expect.any(Number),
+              user_1: expect.any(String),
+              user_2: expect.any(String),
+            })
+          );
+        });
+      });
+    });
+  });
+});
 
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(8)
-    
-                    res.rows.forEach((comment) => {
-    
-                        expect(comment).toEqual(
-                        expect.objectContaining({
-    
-                            comment_id: expect.any(Number),
-                            post_id: expect.any(Number),
-                            owner: expect.any(String),
-                            messgae: expect.any(String),
-                            datetime: expect.any(Date),
-
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
-
-        test('reactions table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM reactions;`)
-                .then((res) => {
-
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(5)
-    
-                    res.rows.forEach((reaction) => {
-    
-                        expect(reaction).toEqual(
-                        expect.objectContaining({
-    
-                            reaction_id: expect.any(Number),
-                            post_id: expect.any(Number),
-                            owner: expect.any(String),
-                            reaction: expect.any(String)
-
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
-
-        test('friendships table correctly seeded', () => {
-    
-            return db.query(`SELECT * FROM friendships;`)
-                .then((res) => {
-
-                    console.log(res.rows)
-    
-                    expect(res.rows.length).toBe(10)
-    
-                    res.rows.forEach((friendship) => {
-    
-                        expect(friendship).toEqual(
-                        expect.objectContaining({
-    
-                            user_1: expect.any(Number),
-                            user_2: expect.any(Number)
-
-                        })
-                        )
-    
-                    })
-    
-                })
-    
-        })
-
-    })
-
-})
-
-export {}
+export {};
