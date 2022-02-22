@@ -1,5 +1,15 @@
-import express from "express";
+import express from 'express'
+// import { getGoalsByUser } from "../controllers/goals.controller";
 
-const userRouter = express.Router();
+import {
+  getUsers,
+  postUser,
+} from "../controllers/users.controller";
 
-export { userRouter };
+const usersRouter = express.Router();
+
+usersRouter.route("/").get(getUsers).post(postUser)
+// usersRouter.route("/").get(getUsers).post(postUser).get("/:username/goals", getGoalsByUser*/);
+
+
+export {usersRouter};
