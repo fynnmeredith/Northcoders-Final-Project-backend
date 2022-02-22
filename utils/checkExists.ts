@@ -4,7 +4,8 @@ const checkGoalExists = (goal_id) => {
   return db
     .query(
       `SELECT * FROM goals
-    WHERE goal_id = ${goal_id};`
+    WHERE goal_id = $1;`,
+      [goal_id]
     )
     .then((res) => {
       return res.rows.length === 1;
@@ -14,12 +15,13 @@ const checkGoalExists = (goal_id) => {
 const checkUserExists = (username) => {
   return db
     .query(
-      `SELECT * FROM USERS
-    WHERE username = ${username}`
+      `SELECT * FROM users
+    WHERE username = $1;`,
+      [username]
     )
     .then((res) => {
       return res.rows.length === 1;
     });
 };
 
-export { checkGoalExists };
+export { checkGoalExists, checkUserExists };

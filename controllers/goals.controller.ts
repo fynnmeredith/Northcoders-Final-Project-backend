@@ -7,7 +7,7 @@ import {
   updateGoalProgress,
   selectGoalsByUser,
 } from "../models/goals.model";
-import { checkGoalExists } from "../utils/checkExists";
+import { checkGoalExists, checkUserExists } from "../utils/checkExists";
 
 const postGoal = (req, res, next) => {
   const {
@@ -22,42 +22,36 @@ const postGoal = (req, res, next) => {
 
   if (!objective || !start_date || !end_date || !owner) {
     next({ status: 400, message: "Bad request" });
-  }
-
-  if (target_value && typeof target_value !== "number") {
+  } else if (target_value && typeof target_value !== "number") {
     next({ status: 400, message: "Bad request" });
-  }
-
-  if (!target_value && unit) {
+  } else if (!target_value && unit) {
     next({ status: 400, message: "Bad request" });
-  }
-
-  if (
+  } else if (
     new Date(start_date).toString() === "Invalid Date" ||
     new Date(end_date).toString() === "Invalid Date"
   ) {
     next({ status: 400, message: "Bad request" });
+  } else {
+    return checkUserExists(owner)
+      .then((doesUserExist) => {
+        if (!doesUserExist) {
+          return Promise.reject({ status: 404, message: "User not found" });
+        }
+        return insertGoal(
+          objective,
+          description,
+          start_date,
+          end_date,
+          owner,
+          target_value,
+          unit
+        );
+      })
+      .then((goal) => {
+        res.status(200).send({ goal });
+      })
+      .catch(next);
   }
-
-  return checkGoalExists(owner)
-    .then((doesUserExist) => {
-      if (!doesUserExist) {
-        return Promise.reject({ status: 404, message: "User not found" });
-      }
-      return insertGoal(
-        objective,
-        description,
-        start_date,
-        end_date,
-        owner,
-        target_value,
-        unit
-      );
-    })
-    .then((goal) => {
-      res.status(200).send({ goal });
-    })
-    .catch(next);
 };
 
 const deleteGoal = (req, res, next) => {
@@ -98,7 +92,20 @@ const patchGoalDetails = (req, res, next) => {};
 
 const patchGoalProgress = (req, res, next) => {};
 
-const getGoalsByUser = (req, res, next) => {};
+const getGoalsByUser = (req, res, next) => {
+  const { username } = req.params;
+  return checkUserExists(username)
+    .then((doesUserExist) => {
+      if (!doesUserExist) {
+        return Promise.reject({ status: 404, message: "User not found" });
+      }
+      return selectGoalsByUser(username);
+    })
+    .then((goals) => {
+      res.status(200).send({ goals });
+    })
+    .catch(next);
+};
 
 export {
   postGoal,

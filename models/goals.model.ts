@@ -10,15 +10,16 @@ const insertGoal = (
   unit: String | undefined
 ) => {
   const status = "active";
-  const progress = [[]];
   let type = "boolean";
+  let progress;
   if (target_value) {
     type = "progress";
+    progress = JSON.stringify([[]]);
   }
   const query = `INSERT INTO goals
       (objective, description, start_date, end_date, type, status, owner, target_value, unit, progress)
       VALUES
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING *;
     `;
   const values = [
@@ -42,7 +43,8 @@ const insertGoal = (
 const deleteGoalFrom = (goal_id: Number) => {
   return db.query(
     `DELETE FROM goals
-      WHERE goal_id = ${goal_id};`
+      WHERE goal_id = $1;`,
+    [goal_id]
   );
 };
 
@@ -50,7 +52,8 @@ const selectGoalByGoalId = (goal_id: Number) => {
   return db
     .query(
       `SELECT * FROM goals
-        WHERE goal_id = ${goal_id};`
+        WHERE goal_id = $1;`,
+      [goal_id]
     )
     .then((res) => {
       if (res.rows.length === 0) {
@@ -64,7 +67,17 @@ const updateGoalDetails = () => {};
 
 const updateGoalProgress = () => {};
 
-const selectGoalsByUser = () => {};
+const selectGoalsByUser = (username) => {
+  return db
+    .query(
+      `SELECT * FROM goals
+      WHERE owner = $1`,
+      [username]
+    )
+    .then((res) => {
+      return res.rows;
+    });
+};
 
 export {
   insertGoal,
