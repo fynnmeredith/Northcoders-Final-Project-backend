@@ -7,13 +7,81 @@ import {
   updateGoalProgress,
   selectGoalsByUser,
 } from "../models/goals.model";
+import { checkGoalExists } from "../utils/checkExists";
 
-const postGoal = (req, res, next) => {};
+const postGoal = (req, res, next) => {
+  const {
+    objective,
+    description,
+    start_date,
+    end_date,
+    owner,
+    target_value,
+    unit,
+  } = req.body;
 
-const deleteGoal = (req, res, next) => {};
+  if (!objective || !start_date || !end_date || !owner) {
+    next({ status: 400, message: "Bad request" });
+  }
+
+  if (target_value && typeof target_value !== "number") {
+    next({ status: 400, message: "Bad request" });
+  }
+
+  if (!target_value && unit) {
+    next({ status: 400, message: "Bad request" });
+  }
+
+  if (
+    new Date(start_date).toString() === "Invalid Date" ||
+    new Date(end_date).toString() === "Invalid Date"
+  ) {
+    next({ status: 400, message: "Bad request" });
+  }
+
+  return checkGoalExists(owner)
+    .then((doesUserExist) => {
+      if (!doesUserExist) {
+        return Promise.reject({ status: 404, message: "User not found" });
+      }
+      return insertGoal(
+        objective,
+        description,
+        start_date,
+        end_date,
+        owner,
+        target_value,
+        unit
+      );
+    })
+    .then((goal) => {
+      res.status(200).send({ goal });
+    })
+    .catch(next);
+};
+
+const deleteGoal = (req, res, next) => {
+  const { goal_id } = req.params;
+
+  if (!Number.isInteger(parseInt(goal_id))) {
+    next({ status: 400, message: "Bad request" });
+  } else {
+    return checkGoalExists(goal_id)
+      .then((doesGoalExist: Boolean) => {
+        if (!doesGoalExist) {
+          return Promise.reject({ status: 404, message: "Goal not found" });
+        }
+        return deleteGoalFrom(goal_id);
+      })
+      .then(() => {
+        res.status(204).send();
+      })
+      .catch(next);
+  }
+};
 
 const getGoalByGoalId = (req, res, next) => {
-  const goal_id = req.params.goal_id;
+  const { goal_id } = req.params;
 
   if (!Number.isInteger(parseInt(goal_id))) {
     next({ status: 400, message: "Bad request" });
