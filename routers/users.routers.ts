@@ -5,17 +5,15 @@ import {
   getUsers,
   postUser,
   patchUser,
-  deleteUser,
+  getUser,
 } from "../controllers/users.controller";
 
 const usersRouter = express.Router();
 
-usersRouter
-  .route("/")
-  .get(getUsers)
-  .post(postUser)
-  .patch(patchUser)
-  .delete(deleteUser);
+usersRouter.route("/").get(getUsers).post(postUser).patch(patchUser);
+
+usersRouter.get("/:username", getUser);
+// .delete(deleteUser)
 // usersRouter.route("/").get(getUsers).post(postUser).get("/:username/goals", getGoalsByUser*/);
 
 export { usersRouter };

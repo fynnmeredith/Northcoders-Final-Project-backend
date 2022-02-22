@@ -34,10 +34,22 @@ export const modifyUser = (username, profile) => {
     });
 };
 
-export const deleteUserModel = (username) => {
+//TBC
+// export const deleteUserModel = (username) => {
+//   return db
+//     .query(`DELETE FROM users WHERE username=($1) RETURNING *;`, [username])
+//     .then((res) => {
+//       return res.rows;
+//     });
+// };
+
+export const selectUser = (username) => {
   return db
-    .query(`DELETE FROM users WHERE username=($1) RETURNING *;`, [username])
+    .query(`SELECT username, profile FROM users WHERE username=($1)`, [
+      username,
+    ])
     .then((res) => {
+      console.log("Model checkpoint", res.rows);
       return res.rows;
     });
 };

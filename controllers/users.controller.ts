@@ -2,7 +2,7 @@ import {
   selectUsers,
   insertUser,
   modifyUser,
-  deleteUserModel,
+  selectUser,
 } from "../models/users.model";
 
 import { requestKeyCheck } from "../utils/jvfuncs";
@@ -64,14 +64,26 @@ export const patchUser = (req, res, next) => {
     });
 };
 
-export const deleteUser = (req, res, next) => {
-  const { username } = req.body;
+// DELETE USER TBC
+// export const deleteUser = (req, res, next) => {
+//   const { username } = req.body;
 
-  return deleteUserModel(username)
-    .then((user) => {
-      res.status(200).send({ user });
-    })
-    .catch((err) => {
-      next(err);
-    });
+//   return deleteUserModel(username)
+//     .then((user) => {
+//       res.status(200).send({ user });
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       next(err);
+//     });
+// };
+
+export const getUser = (req, res, next) => {
+  const { username } = req.params;
+  console.log("CONTROLLER GET USER", username);
+
+  return selectUser(username).then((user) => {
+    console.log("controller checkpoint", user);
+    res.status(200).send({ user });
+  });
 };

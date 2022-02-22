@@ -91,7 +91,7 @@ describe("/api/users", () => {
 });
 
 //TBC IF PROFILE IMG URL IS STORED VIA AUTHENTICATION
-describe.only("Patch /api/users", () => {
+describe("Patch /api/users", () => {
   test("Post user profile works", () => {
     return request(app)
       .patch("/api/users")
@@ -137,18 +137,34 @@ describe("/api/users", () => {
         .delete("/api/users")
         .send({ username: "jeff" })
         .expect(200)
-        .then((res) => {});
+        .then((res) => {
+          expect(res.body.user[0]).toBeInstanceOf(Object);
+          expect(res.body.user[0]).toMatchObject({
+            username: expect.any(String),
+            profile: expect.any(String),
+          });
+        });
     });
     test("Delete user profile request with non-existent user throws error", () => {});
     test("Delete user profile request with missing keys throws error", () => {});
   });
 });
 
-describe("/api/users/:username", () => {
+describe.only("/api/user/:username", () => {
   describe("GET user by username", () => {
-    test("Get user by username works", () => {});
-    test("Get user by username with non-existent username throws error", () => {});
-    test("Get user by username request with missing keys throws error", () => {});
+    test("Get user by username works", () => {
+      return request(app)
+        .get("/api/users/jeff")
+        .expect(200)
+        .then((res) => {
+          console.log("TEST CHECKPOINT", res.body.user);
+          expect(res.body.user[0]).toBeInstanceOf(Object);
+          expect(res.body.user[0]).toMatchObject({
+            username: "jeff",
+            profile: "Constant striver",
+          });
+        });
+    });
   });
 });
 
