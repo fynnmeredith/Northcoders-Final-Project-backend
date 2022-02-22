@@ -1,5 +1,6 @@
 import express from "express";
-// import { getGoalsByUser } from "../controllers/goals.controller";
+
+import { getGoalsByUser } from "../controllers/goals.controller";
 
 import {
   getUsers,
@@ -14,6 +15,7 @@ usersRouter.route("/").get(getUsers).post(postUser).patch(patchUser);
 
 usersRouter.get("/:username", getUser);
 // .delete(deleteUser)
-// usersRouter.route("/").get(getUsers).post(postUser).get("/:username/goals", getGoalsByUser*/);
+
+usersRouter.get("/:username/goals", getGoalsByUser);
 
 export { usersRouter };
