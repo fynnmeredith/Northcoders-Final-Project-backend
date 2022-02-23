@@ -24,4 +24,6 @@ const checkUserExists = (username) => {
     });
 };
 
-export { checkGoalExists, checkUserExists };
+const checkSubgoalExists = (subgoal_id) => {};
+
+export { checkGoalExists, checkUserExists, checkSubgoalExists };
