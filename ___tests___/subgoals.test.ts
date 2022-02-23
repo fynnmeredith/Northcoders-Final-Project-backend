@@ -199,7 +199,8 @@ describe("/api/goals/:goal_id/subgoals", () => {
         .expect(200)
         .then((res) => {
           const expectedSubgoal = {
-            goal_id: 14,
+            subgoal_id: 14,
+            goal_id: 2,
             objective: "Write prologue",
             start_date: null,
             end_date: "2022-02-24T00:00:00.000Z",
@@ -280,7 +281,7 @@ describe("/api/goals/:goal_id/subgoals", () => {
     test("returns error when invalid goal is entered", () => {
       return request(app)
         .get("/api/goals/one/subgoals")
-        .expect(404)
+        .expect(400)
         .then((res) => {
           expect(res.body.message).toEqual("Bad request");
         });
@@ -293,133 +294,6 @@ describe("/api/goals/:goal_id/subgoals", () => {
           expect(res.body.message).toEqual("Goal not found");
         });
     });
-    test("accepts from_date query and only shows subgoals after that date", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=2022-02-21")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals.length).toBe(2);
-          res.body.subgoals.forEach((subgoal) => {
-            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
-              new Date(2022, 1, 21).getTime()
-            );
-          });
-        });
-    });
-    test("accepts to_date query and only shows subgoals before that date", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?to_date=2022-02-20")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals.length).toBe(2);
-          res.body.subgoals.forEach((subgoal) => {
-            expect(new Date(subgoal.start_date).getTime()).toBeLessThanOrEqual(
-              new Date(2022, 1, 20).getTime()
-            );
-          });
-        });
-    });
-    test("accepts both to_date and from_date queries simultaneously", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=2022-02-14&to_date=2022-02-20")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals.length).toBe(1);
-          res.body.subgoals.forEach((subgoal) => {
-            expect(new Date(subgoal.start_date).getTime()).toBeLessThanOrEqual(
-              new Date(2022, 1, 20).getTime()
-            );
-            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
-              new Date(2022, 1, 14).getTime()
-            );
-          });
-        });
-    });
-    test("if subgoal partly clips with beginning of range, it is still included", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=2022-02-20")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals.length).toBe(3);
-          res.body.subgoals.forEach((subgoal) => {
-            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
-              new Date(2022, 1, 20).getTime()
-            );
-          });
-        });
-    });
-    test("if subgoal partly clips with end of range, it is still included", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?to_date=2022-02-21")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals.length).toBe(3);
-          res.body.subgoals.forEach((subgoal) => {
-            expect(new Date(subgoal.start_date).getTime()).toBeLessThanOrEqual(
-              new Date(2022, 1, 21).getTime()
-            );
-          });
-        });
-    });
-    test("returns empty array if there are no subgoals within range set", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=2022-09-29")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals).toEqual([]);
-        });
-    });
-    test("returns error if to_date is before from_date", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=2022-02-21&to_date=2022-02-20")
-        .expect(400)
-        .then((res) => {
-          expect(res.body.message).toBe(
-            "to_date must be equal to or later than from_date"
-          );
-        });
-    });
-    test("does not return error if to_date is equal to from_date", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=2022-02-20&to_date=2022-02-20")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.subgoals.length).toBe(1);
-          expect(res.body.subgoals[0].subgoal_id).toBe(2);
-        });
-    });
-    test("returns error if from_date is not in YYYY-MM-DD form", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?from_date=today")
-        .expect(400)
-        .then((res) => {
-          expect(res.body.message).toBe("Bad request");
-        });
-    });
-    test("returns error if to_date is not in YYYY-MM-DD form", () => {
-      return request(app)
-        .get("/api/goals/1/subgoals?to_date=today")
-        .expect(400)
-        .then((res) => {
-          expect(res.body.message).toBe("Bad request");
-        });
-    });
-  });
-  test("successfully retrieves boolean subgoals when using from_date and to_date", () => {
-    return request(app)
-      .get("/api/goals/2/subgoals?from_date=2022-02-21&to_date=2022-02-29")
-      .expect(200)
-      .then((res) => {
-        expect(res.body.subgoals.length).toBe(2);
-        res.body.subgoals.forEach((subgoal) => {
-          expect(new Date(subgoal.end_date).getTime()).toBeLessThanOrEqual(
-            new Date(2022, 1, 29).getTime()
-          );
-          expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
-            new Date(2022, 1, 21).getTime()
-          );
-        });
-      });
   });
 });
 
@@ -436,7 +310,7 @@ describe("/api/subgoals/:subgoal_id", () => {
             goal_id: 2,
             objective: "Proof-read novella",
             start_date: null,
-            end_date: new Date(2022, 2, 4),
+            end_date: "2022-03-04T00:00:00.000Z",
             type: "boolean",
             status: "active",
             owner: "jeff",
@@ -590,9 +464,9 @@ describe("/api/subgoals/:subgoal_id/status", () => {
         .send({ status: "active" })
         .expect(200)
         .then((res) => {
-          expect(res.body.goal.goal_id).toBe(5);
-          expect(res.body.goal.status).toBe("active");
-          expect(res.body.goal.finish_date).toBe(null);
+          expect(res.body.subgoal.subgoal_id).toBe(5);
+          expect(res.body.subgoal.status).toBe("active");
+          expect(res.body.subgoal.finish_date).toBe(null);
         });
     });
   });
@@ -696,7 +570,7 @@ describe("/api/subgoals/:subgoal_id/progress", () => {
         .expect(400)
         .then((res) => {
           expect(res.body.message).toBe(
-            "Cannot add progress outside of date range of goal"
+            "Cannot add progress outside of date range of subgoal"
           );
         });
     });
