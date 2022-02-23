@@ -48,9 +48,30 @@ const checkFriendshipExists = (friendship_id) => {
     });
 };
 
+const checkIfUsersAreFriends = (user_1, user_2) => {
+  const user1FriendshipPromise = db.query(
+    `SELECT * FROM friendships
+      WHERE user_1 = $1
+      AND user_2 = $2;`,
+    [user_1, user_2]
+  );
+  const user2FriendshipPromise = db.query(
+    `SELECT * FROM friendships
+      WHERE user_1 = $1
+      AND user_2 = $2;`,
+    [user_2, user_1]
+  );
+  return Promise.all([user1FriendshipPromise, user2FriendshipPromise]).then(
+    ([user1Res, user2Res]) => {
+      return user1Res.rows.length + user2Res.rows.length > 0;
+    }
+  );
+};
+
 export {
   checkGoalExists,
   checkUserExists,
   checkSubgoalExists,
   checkFriendshipExists,
+  checkIfUsersAreFriends,
 };
