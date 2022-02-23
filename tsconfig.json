@@ -3,6 +3,7 @@
     "lib": ["es6"],
     "types": ["node"],
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "outDir":"heroku"
   }
 }
