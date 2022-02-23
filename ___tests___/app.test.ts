@@ -32,7 +32,7 @@ describe("", () => {
 
     test("goals table correctly seeded", () => {
       return db.query(`SELECT * FROM goals;`).then((res) => {
-        expect(res.rows.length).toBe(7);
+        expect(res.rows.length).toBe(12);
 
         res.rows.forEach((goal) => {
           expect(goal).toEqual(

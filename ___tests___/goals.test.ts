@@ -25,7 +25,7 @@ describe("/api/goals", () => {
         .expect(200)
         .then((res) => {
           const expectedGoal = {
-            goal_id: 8,
+            goal_id: 13,
             objective: "Cycle 300km",
             description: "Got to feed the perpeptual cycle of self-improvement",
             start_date: "2022-02-22T00:00:00.000Z",
@@ -213,7 +213,7 @@ describe("/api/goals", () => {
         .expect(200)
         .then((res) => {
           const expectedGoal = {
-            goal_id: 8,
+            goal_id: 13,
             objective: "Cycle up Ben Nevis",
             description: "Got to feed the perpeptual cycle of self-improvement",
             start_date: "2022-02-22T00:00:00.000Z",
@@ -329,7 +329,7 @@ describe("/api/goals/:goal_id", () => {
 // });
 
 describe("/api/goals/:goal_id/status", () => {
-  describe.only("PATCH", () => {
+  describe("PATCH", () => {
     test("patches successfully when valid goal_id and patch object are entered", () => {
       return request(app)
         .patch("/api/goals/2/status")
@@ -558,6 +558,119 @@ describe("/api/users/:username/goals", () => {
         .expect(404)
         .then((res) => {
           expect(res.body.message).toEqual("User not found");
+        });
+    });
+    test("accepts from_date query and only shows goals after that date", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=2022-03-29")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals.length).toBe(4);
+          res.body.goals.forEach((goal) => {
+            expect(new Date(goal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 2, 29).getTime()
+            );
+          });
+        });
+    });
+    test("accepts to_date query and only shows goals before that date", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?to_date=2022-05-29")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals.length).toBe(4);
+          res.body.goals.forEach((goal) => {
+            expect(new Date(goal.start_date).getTime()).toBeLessThanOrEqual(
+              new Date(2022, 4, 29).getTime()
+            );
+          });
+        });
+    });
+    test("accepts both to_date and from_date queries simultaneously", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=2022-03-29&to_date=2022-05-29")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals.length).toBe(2);
+          res.body.goals.forEach((goal) => {
+            expect(new Date(goal.start_date).getTime()).toBeLessThanOrEqual(
+              new Date(2022, 4, 29).getTime()
+            );
+            expect(new Date(goal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 2, 29).getTime()
+            );
+          });
+        });
+    });
+    test("if goal partly clips with beginning of range, it is still included", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=2022-03-28")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals.length).toBe(5);
+          res.body.goals.forEach((goal) => {
+            expect(new Date(goal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 2, 28).getTime()
+            );
+          });
+        });
+    });
+    test("if goal partly clips with end of range, it is still included", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?to_date=2022-06-01")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals.length).toBe(5);
+          res.body.goals.forEach((goal) => {
+            expect(new Date(goal.start_date).getTime()).toBeLessThanOrEqual(
+              new Date(2022, 5, 1).getTime()
+            );
+          });
+        });
+    });
+    test("returns empty array if there are no goals within range set", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=2022-09-29")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals).toEqual([]);
+        });
+    });
+    test("returns error if to_date is before from_date", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=2022-03-29&to_date=2022-03-28")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe(
+            "to_date must be equal to or later than from_date"
+          );
+        });
+    });
+    test("does not return error if to_date is equal to from_date", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=2022-03-27&to_date=2022-03-27")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goals.length).toBe(1);
+          expect(res.body.goals[0].objective).toBe(
+            'Learn to play "Come As You Are" on guitar'
+          );
+        });
+    });
+    test("returns error if from_date is not in YYYY-MM-DD form", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?from_date=today")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error if to_date is not in YYYY-MM-DD form", () => {
+      return request(app)
+        .get("/api/users/dmitri/goals?to_date=today")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
         });
     });
   });

@@ -9,16 +9,26 @@ import {
   patchGoalStatus,
 } from "../controllers/goals.controller";
 
-const goalRouter = express.Router();
+import {
+  postSubgoal,
+  getSubgoalsByGoalId,
+} from "../controllers/subgoals.controller";
 
-goalRouter.post("/", postGoal);
+const goalsRouter = express.Router();
 
-goalRouter.route("/:goal_id").delete(deleteGoal).get(getGoalByGoalId);
+goalsRouter.post("/", postGoal);
 
-goalRouter.patch("/:goal_id/details", patchGoalDetails);
+goalsRouter.route("/:goal_id").delete(deleteGoal).get(getGoalByGoalId);
 
-goalRouter.patch("/:goal_id/status", patchGoalStatus);
+goalsRouter.patch("/:goal_id/details", patchGoalDetails);
 
-goalRouter.patch("/:goal_id/progress", patchGoalProgress);
+goalsRouter.patch("/:goal_id/status", patchGoalStatus);
 
-export { goalRouter };
+goalsRouter.patch("/:goal_id/progress", patchGoalProgress);
+
+goalsRouter
+  .route("/:goal_id/subgoals")
+  .post(postSubgoal)
+  .get(getSubgoalsByGoalId);
+
+export { goalsRouter };
