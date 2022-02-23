@@ -66,6 +66,25 @@ const selectGoalByGoalId = (goal_id: number) => {
 
 const updateGoalDetails = () => {};
 
+const updateGoalStatus = (
+  goal_id: number,
+  status: string,
+  finish_date: Date | undefined
+) => {
+  return db
+    .query(
+      `UPDATE goals
+  SET status = $1,
+  finish_date = $2
+  WHERE goal_id = $3
+  RETURNING *;`,
+      [status, finish_date, goal_id]
+    )
+    .then((res) => {
+      return res.rows[0];
+    });
+};
+
 const updateGoalProgress = (
   goal_id: number,
   date: Date,
@@ -81,19 +100,13 @@ const updateGoalProgress = (
   newProgress.push([new Date(date), newValue]);
   const newProgressJson = JSON.stringify(newProgress);
 
-  let newStatus = "active";
-  if (newValue > targetValue) {
-    newStatus = "completed";
-  }
-
   return db
     .query(
       `UPDATE goals
-      SET progress = $1,
-      status = $2
-      WHERE goal_id = $3
+      SET progress = $1
+      WHERE goal_id = $2
       RETURNING *;`,
-      [newProgressJson, newStatus, goal_id]
+      [newProgressJson, goal_id]
     )
     .then((res) => {
       return res.rows[0];
@@ -117,6 +130,7 @@ export {
   deleteGoalFrom,
   selectGoalByGoalId,
   updateGoalDetails,
+  updateGoalStatus,
   updateGoalProgress,
   selectGoalsByUser,
 };

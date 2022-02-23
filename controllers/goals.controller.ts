@@ -4,6 +4,7 @@ import {
   deleteGoalFrom,
   selectGoalByGoalId,
   updateGoalDetails,
+  updateGoalStatus,
   updateGoalProgress,
   selectGoalsByUser,
 } from "../models/goals.model";
@@ -48,7 +49,7 @@ const postGoal = (req, res, next) => {
           unit
         );
       })
-      .then((goal) => {
+      .then((goal: Goal) => {
         res.status(200).send({ goal });
       })
       .catch(next);
@@ -82,7 +83,7 @@ const getGoalByGoalId = (req, res, next) => {
     next({ status: 400, message: "Bad request" });
   } else {
     return selectGoalByGoalId(goal_id)
-      .then((goal) => {
+      .then((goal: Goal) => {
         res.status(200).send({ goal });
       })
       .catch(next);
@@ -90,6 +91,34 @@ const getGoalByGoalId = (req, res, next) => {
 };
 
 const patchGoalDetails = (req, res, next) => {};
+
+const patchGoalStatus = (req, res, next) => {
+  const { goal_id } = req.params;
+  const { status, date } = req.body;
+
+  if (!Number.isInteger(parseInt(goal_id))) {
+    next({ status: 400, message: "Bad request" });
+  } else if (status !== "completed" && status !== "active") {
+    next({ status: 400, message: "Bad request" });
+  } else if (
+    status === "completed" &&
+    new Date(date).toString() === "Invalid Date"
+  ) {
+    next({ status: 400, message: "Bad request" });
+  } else {
+    return checkGoalExists(goal_id)
+      .then((doesGoalExist: Boolean) => {
+        if (!doesGoalExist) {
+          return Promise.reject({ status: 404, message: "Goal not found" });
+        }
+        return updateGoalStatus(goal_id, status, date);
+      })
+      .then((goal: Goal) => {
+        res.status(200).send({ goal });
+      })
+      .catch(next);
+  }
+};
 
 const patchGoalProgress = (req, res, next) => {
   const { goal_id } = req.params;
@@ -128,7 +157,7 @@ const patchGoalProgress = (req, res, next) => {
           goal.target_value
         );
       })
-      .then((goal) => {
+      .then((goal: Goal) => {
         res.status(200).send({ goal });
       })
       .catch(next);
@@ -144,7 +173,7 @@ const getGoalsByUser = (req, res, next) => {
       }
       return selectGoalsByUser(username);
     })
-    .then((goals) => {
+    .then((goals: Goal[]) => {
       res.status(200).send({ goals });
     })
     .catch(next);
@@ -155,6 +184,7 @@ export {
   deleteGoal,
   getGoalByGoalId,
   patchGoalDetails,
+  patchGoalStatus,
   patchGoalProgress,
   getGoalsByUser,
 };
