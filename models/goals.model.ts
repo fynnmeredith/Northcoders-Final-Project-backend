@@ -1,5 +1,6 @@
 import { db } from "../db/connection";
 import { ProgressPoint } from "../types";
+import { formatDate } from "../utils/format";
 
 const insertGoal = (
   objective: string,
@@ -26,8 +27,8 @@ const insertGoal = (
   const values = [
     objective,
     description,
-    start_date,
-    end_date,
+    formatDate(start_date),
+    formatDate(end_date),
     type,
     status,
     owner,
@@ -113,11 +114,26 @@ const updateGoalProgress = (
     });
 };
 
-const selectGoalsByUser = (username: string) => {
+const selectGoalsByUser = (
+  username: string,
+  fromDate: Date | undefined,
+  toDate: Date | undefined
+) => {
+  let dateLine: string | undefined;
+  if (fromDate && !toDate) {
+    dateLine = ` AND end_date >= '${formatDate(fromDate)}'::date`;
+  } else if (toDate && !fromDate) {
+    dateLine = ` AND start_date <= '${formatDate(toDate)}'::date`;
+  } else if (toDate && fromDate) {
+    dateLine = ` AND end_date >= '${formatDate(
+      fromDate
+    )}'::date AND start_date <= '${formatDate(toDate)}'::date`;
+  }
   return db
     .query(
       `SELECT * FROM goals
-      WHERE owner = $1`,
+      WHERE owner = $1
+      ${dateLine ? dateLine : ""};`,
       [username]
     )
     .then((res) => {
