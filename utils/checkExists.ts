@@ -24,6 +24,16 @@ const checkUserExists = (username) => {
     });
 };
 
-const checkSubgoalExists = (subgoal_id) => {};
+const checkSubgoalExists = (subgoal_id) => {
+  return db
+    .query(
+      `SELECT * FROM subgoals
+  WHERE subgoal_id = $1;`,
+      [subgoal_id]
+    )
+    .then((res) => {
+      return res.rows.length === 1;
+    });
+};
 
 export { checkGoalExists, checkUserExists, checkSubgoalExists };
