@@ -126,6 +126,51 @@ const selectSubgoalsByGoalId = (goal_id: number) => {
     });
 };
 
+const selectSubgoalsByUser = (
+  username: string,
+  fromDate: Date | undefined,
+  toDate: Date | undefined
+) => {
+  let dateLineProgress: string | undefined;
+  let dateLineBoolean: string | undefined;
+  if (fromDate && !toDate) {
+    dateLineProgress = ` AND end_date >= '${formatDate(fromDate)}'::date`;
+    dateLineBoolean = ` AND end_date >= '${formatDate(fromDate)}'::date`;
+  } else if (toDate && !fromDate) {
+    dateLineProgress = ` AND start_date <= '${formatDate(toDate)}'::date`;
+    dateLineBoolean = ` AND end_date <= '${formatDate(toDate)}'::date`;
+  } else if (toDate && fromDate) {
+    dateLineProgress = ` AND end_date >= '${formatDate(
+      fromDate
+    )}'::date AND start_date <= '${formatDate(toDate)}'::date`;
+    dateLineBoolean = ` AND end_date >= '${formatDate(
+      fromDate
+    )}'::date AND end_date <= '${formatDate(toDate)}'::date`;
+  }
+
+  const progressQuery = db.query(
+    `SELECT * FROM subgoals
+      WHERE owner = $1
+      AND type = 'progress'
+      ${dateLineProgress ? dateLineProgress : ""};`,
+    [username]
+  );
+  const booleanQuery = db.query(
+    `SELECT * FROM subgoals
+      WHERE owner = $1
+      AND type = 'boolean'
+      ${dateLineBoolean ? dateLineBoolean : ""};`,
+    [username]
+  );
+
+  return Promise.all([progressQuery, booleanQuery]).then(
+    ([progressResponse, booleanResponse]) => {
+      const res = [...progressResponse.rows, ...booleanResponse.rows];
+      return res;
+    }
+  );
+};
+
 export {
   insertSubgoal,
   deleteSubgoalFrom,
@@ -134,4 +179,5 @@ export {
   updateSubgoalStatus,
   updateSubgoalProgress,
   selectSubgoalsByGoalId,
+  selectSubgoalsByUser,
 };

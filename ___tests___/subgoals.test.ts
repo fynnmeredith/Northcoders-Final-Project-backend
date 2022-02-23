@@ -577,4 +577,182 @@ describe("/api/subgoals/:subgoal_id/progress", () => {
   });
 });
 
+describe("/api/users/:username/subgoals", () => {
+  describe("GET", () => {
+    test("retrieves subgoals for user when a valid user is entered", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals")
+        .expect(200)
+        .then((res) => {
+          const { subgoals } = res.body;
+
+          expect(subgoals.length).toBe(4);
+
+          subgoals.forEach((goal) => {
+            expect(goal.owner).toBe("mary");
+            expect(new Date(goal.end_date)).not.toBe("Invalid Date");
+            expect(goal).toEqual(
+              expect.objectContaining({
+                subgoal_id: expect.any(Number),
+                goal_id: expect.any(Number),
+                objective: expect.any(String),
+                type: expect.any(String),
+                status: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    test("returns empty object when no subgoals exist for a user", () => {
+      return request(app)
+        .get("/api/users/martina/subgoals")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals).toEqual([]);
+        });
+    });
+    test("returns error when non-existent user is entered", () => {
+      return request(app)
+        .get("/api/users/simon/subgoals")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.message).toEqual("User not found");
+        });
+    });
+    test("accepts from_date query and only shows subgoals after that date", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=2022-03-07")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(2);
+          res.body.subgoals.forEach((subgoal) => {
+            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 2, 7).getTime()
+            );
+          });
+        });
+    });
+    test("accepts to_date query and only shows goals before that date", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?to_date=2022-03-06")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(2);
+          res.body.subgoals.forEach((subgoal) => {
+            expect(new Date(subgoal.start_date).getTime()).toBeLessThanOrEqual(
+              new Date(2022, 2, 6).getTime()
+            );
+          });
+        });
+    });
+    test("accepts both to_date and from_date queries simultaneously", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=2022-02-07&to_date=2022-03-06")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(1);
+          res.body.subgoals.forEach((subgoal) => {
+            expect(new Date(subgoal.start_date).getTime()).toBeLessThanOrEqual(
+              new Date(2022, 2, 6).getTime()
+            );
+            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 1, 7).getTime()
+            );
+          });
+        });
+    });
+    test("if subgoal partly clips with beginning of range, it is still included", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=2022-03-06")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(3);
+          res.body.subgoals.forEach((subgoal) => {
+            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 2, 6).getTime()
+            );
+          });
+        });
+    });
+    test("if subgoal partly clips with end of range, it is still included", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?to_date=2022-03-07")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(3);
+          res.body.subgoals.forEach((subgoal) => {
+            expect(new Date(subgoal.start_date).getTime()).toBeLessThanOrEqual(
+              new Date(2022, 2, 7).getTime()
+            );
+          });
+        });
+    });
+    test("returns empty array if there are no subgoals within range set", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=2022-09-29")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals).toEqual([]);
+        });
+    });
+    test("returns error if to_date is before from_date", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=2022-03-29&to_date=2022-03-28")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe(
+            "to_date must be equal to or later than from_date"
+          );
+        });
+    });
+    test("does not return error if to_date is equal to from_date", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=2022-03-27&to_date=2022-03-27")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(1);
+          expect(res.body.subgoals[0].subgoal_id).toBe(11);
+        });
+    });
+    test("returns error if from_date is not in YYYY-MM-DD form", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?from_date=today")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error if to_date is not in YYYY-MM-DD form", () => {
+      return request(app)
+        .get("/api/users/mary/subgoals?to_date=today")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("functions correctly when dealing with boolean-type goals", () => {
+      return request(app)
+        .get("/api/users/jeff/subgoals?from_date=2022-02-21&to_date=2022-02-29")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.subgoals.length).toBe(4);
+          res.body.subgoals.forEach((subgoal) => {
+            expect(new Date(subgoal.end_date).getTime()).toBeGreaterThanOrEqual(
+              new Date(2022, 1, 21).getTime()
+            );
+            if (subgoal.type === "progress") {
+              expect(
+                new Date(subgoal.start_date).getTime()
+              ).toBeLessThanOrEqual(new Date(2022, 1, 29).getTime());
+            } else {
+              expect(new Date(subgoal.end_date).getTime()).toBeLessThanOrEqual(
+                new Date(2022, 1, 29).getTime()
+              );
+            }
+          });
+        });
+    });
+  });
+});
+
 export {};
