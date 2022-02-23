@@ -73,7 +73,7 @@ const formatFriendships = (friendships) => {
   });
 };
 
-const formatDate = (date: Date | undefined): String | undefined => {
+const formatDate = (date: Date | undefined): string | undefined => {
   if (!date) {
     return undefined;
   }
@@ -97,7 +97,7 @@ const formatDate = (date: Date | undefined): String | undefined => {
   return formattedDate;
 };
 
-const formatDatetime = (datetime: Date | undefined): String | undefined => {
+const formatDatetime = (datetime: Date | undefined): string | undefined => {
   if (!datetime) {
     return undefined;
   }
@@ -144,4 +144,6 @@ export {
   formatComments,
   formatReactions,
   formatFriendships,
+  formatDate,
+  formatDatetime,
 };

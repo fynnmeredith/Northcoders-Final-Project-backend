@@ -1,42 +1,43 @@
-type ProgressPoint = [Date, Number];
+type ProgressPoint = [Date, number];
 
 interface User {
-  username: String;
-  profile: String;
+  username: string;
+  profile: string;
 }
 
 interface Goal {
-  goal_id: Number;
-  objective: String;
-  description: String;
+  goal_id: number;
+  objective: string;
+  description: string;
   start_date?: Date;
   end_date: Date;
   type: "progress" | "boolean";
   status: "active" | "completed";
-  owner: String;
-  target_value?: Number;
-  unit?: String;
+  owner: string;
+  target_value?: number;
+  unit?: string;
   progress?: ProgressPoint[];
+  finish_date?: Date;
 }
 
 interface Subgoal {
-  subgoal_id: Number;
-  goal_id: Number;
-  objective: String;
+  subgoal_id: number;
+  goal_id: number;
+  objective: string;
   start_date?: Date;
   end_date: Date;
   type: "progress" | "boolean";
   status: "active" | "completed";
-  owner: String;
-  target_value?: Number;
-  unit?: String;
+  owner: string;
+  target_value?: number;
+  unit?: string;
   progress?: ProgressPoint[];
   finish_date?: Date;
 }
 
 interface CustomError {
-  status: Number;
-  message: String;
+  status: number;
+  message: string;
 }
 
-export { CustomError, User, Goal, Subgoal };
+export { ProgressPoint, CustomError, User, Goal, Subgoal };

@@ -2,7 +2,7 @@ import { db } from "../db/connection";
 import { ProgressPoint } from "../types";
 import { formatDate } from "../utils/format";
 
-const insertGoal = (
+const insertSubgoal = (
   objective: string,
   description: string | undefined,
   start_date: Date,
@@ -42,7 +42,7 @@ const insertGoal = (
   });
 };
 
-const deleteGoalFrom = (goal_id: number) => {
+const deleteSubgoalFrom = (goal_id: number) => {
   return db.query(
     `DELETE FROM goals
       WHERE goal_id = $1;`,
@@ -50,7 +50,7 @@ const deleteGoalFrom = (goal_id: number) => {
   );
 };
 
-const selectGoalByGoalId = (goal_id: number) => {
+const selectSubgoalBySubgoalId = (goal_id: number) => {
   return db
     .query(
       `SELECT * FROM goals
@@ -65,9 +65,9 @@ const selectGoalByGoalId = (goal_id: number) => {
     });
 };
 
-const updateGoalDetails = () => {};
+const updateSubgoalDetails = () => {};
 
-const updateGoalStatus = (
+const updateSubgoalStatus = (
   goal_id: number,
   status: string,
   finish_date: Date | undefined
@@ -86,7 +86,7 @@ const updateGoalStatus = (
     });
 };
 
-const updateGoalProgress = (
+const updateSubgoalProgress = (
   goal_id: number,
   date: Date,
   value: number,
@@ -114,7 +114,7 @@ const updateGoalProgress = (
     });
 };
 
-const selectGoalsByUser = (
+const selectSubgoalsByGoalId = (
   username: string,
   fromDate: Date | undefined,
   toDate: Date | undefined
@@ -142,11 +142,11 @@ const selectGoalsByUser = (
 };
 
 export {
-  insertGoal,
-  deleteGoalFrom,
-  selectGoalByGoalId,
-  updateGoalDetails,
-  updateGoalStatus,
-  updateGoalProgress,
-  selectGoalsByUser,
+  insertSubgoal,
+  deleteSubgoalFrom,
+  selectSubgoalBySubgoalId,
+  updateSubgoalDetails,
+  updateSubgoalStatus,
+  updateSubgoalProgress,
+  selectSubgoalsByGoalId,
 };

@@ -1,17 +1,17 @@
 import e from "cors";
 import {
-  insertGoal,
-  deleteGoalFrom,
-  selectGoalByGoalId,
-  updateGoalDetails,
-  updateGoalStatus,
-  updateGoalProgress,
-  selectGoalsByUser,
-} from "../models/goals.model";
+  insertSubgoal,
+  deleteSubgoalFrom,
+  selectSubgoalBySubgoalId,
+  updateSubgoalDetails,
+  updateSubgoalStatus,
+  updateSubgoalProgress,
+  selectSubgoalsByGoalId,
+} from "../models/subgoals.model";
 import { checkGoalExists, checkUserExists } from "../utils/checkExists";
-import { Goal } from "../types";
+import { Subgoal } from "../types";
 
-const postGoal = (req, res, next) => {
+const postSubgoal = (req, res, next) => {
   const {
     objective,
     description,
@@ -39,7 +39,7 @@ const postGoal = (req, res, next) => {
         if (!doesUserExist) {
           return Promise.reject({ status: 404, message: "User not found" });
         }
-        return insertGoal(
+        return insertSubgoal(
           objective,
           description,
           start_date,
@@ -49,14 +49,14 @@ const postGoal = (req, res, next) => {
           unit
         );
       })
-      .then((goal: Goal) => {
-        res.status(200).send({ goal });
+      .then((subgoal: Subgoal) => {
+        res.status(200).send({ subgoal });
       })
       .catch(next);
   }
 };
 
-const deleteGoal = (req, res, next) => {
+const deleteSubgoal = (req, res, next) => {
   const { goal_id } = req.params;
 
   if (!Number.isInteger(parseInt(goal_id))) {
@@ -67,7 +67,7 @@ const deleteGoal = (req, res, next) => {
         if (!doesGoalExist) {
           return Promise.reject({ status: 404, message: "Goal not found" });
         }
-        return deleteGoalFrom(goal_id);
+        return deleteSubgoalFrom(goal_id);
       })
       .then(() => {
         res.status(204).send();
@@ -76,23 +76,23 @@ const deleteGoal = (req, res, next) => {
   }
 };
 
-const getGoalByGoalId = (req, res, next) => {
+const getSubgoalBySubgoalId = (req, res, next) => {
   const { goal_id } = req.params;
 
   if (!Number.isInteger(parseInt(goal_id))) {
     next({ status: 400, message: "Bad request" });
   } else {
-    return selectGoalByGoalId(goal_id)
-      .then((goal: Goal) => {
-        res.status(200).send({ goal });
+    return selectSubgoalBySubgoalId(goal_id)
+      .then((subgoal: Subgoal) => {
+        res.status(200).send({ subgoal });
       })
       .catch(next);
   }
 };
 
-const patchGoalDetails = (req, res, next) => {};
+const patchSubgoalDetails = (req, res, next) => {};
 
-const patchGoalStatus = (req, res, next) => {
+const patchSubgoalStatus = (req, res, next) => {
   const { goal_id } = req.params;
   const { status, date } = req.body;
 
@@ -111,16 +111,16 @@ const patchGoalStatus = (req, res, next) => {
         if (!doesGoalExist) {
           return Promise.reject({ status: 404, message: "Goal not found" });
         }
-        return updateGoalStatus(goal_id, status, date);
+        return updateSubgoalStatus(goal_id, status, date);
       })
-      .then((goal: Goal) => {
-        res.status(200).send({ goal });
+      .then((subgoal: Subgoal) => {
+        res.status(200).send({ subgoal });
       })
       .catch(next);
   }
 };
 
-const patchGoalProgress = (req, res, next) => {
+const patchSubgoalProgress = (req, res, next) => {
   const { goal_id } = req.params;
   const { date, value } = req.body;
 
@@ -131,17 +131,17 @@ const patchGoalProgress = (req, res, next) => {
   } else if (new Date(date).toString() === "Invalid Date") {
     next({ status: 400, message: "Bad request" });
   } else {
-    return selectGoalByGoalId(goal_id)
-      .then((goal: Goal) => {
-        if (goal.type === "boolean") {
+    return selectSubgoalBySubgoalId(goal_id)
+      .then((subgoal: Subgoal) => {
+        if (subgoal.type === "boolean") {
           return Promise.reject({
             status: 400,
             message: "Progress cannot be added to 'boolean' type goal",
           });
         }
         if (
-          new Date(date) < new Date(goal.start_date) ||
-          new Date(date) > new Date(goal.end_date)
+          new Date(date) < new Date(subgoal.start_date) ||
+          new Date(date) > new Date(subgoal.end_date)
         ) {
           return Promise.reject({
             status: 400,
@@ -149,22 +149,22 @@ const patchGoalProgress = (req, res, next) => {
           });
         }
 
-        return updateGoalProgress(
+        return updateSubgoalProgress(
           goal_id,
           date,
           value,
-          goal.progress,
-          goal.target_value
+          subgoal.progress,
+          subgoal.target_value
         );
       })
-      .then((goal: Goal) => {
-        res.status(200).send({ goal });
+      .then((subgoal: Subgoal) => {
+        res.status(200).send({ subgoal });
       })
       .catch(next);
   }
 };
 
-const getGoalsByUser = (req, res, next) => {
+const getSubgoalsByGoalId = (req, res, next) => {
   const { username } = req.params;
   const { from_date, to_date } = req.query;
 
@@ -212,14 +212,14 @@ const getGoalsByUser = (req, res, next) => {
           if (!doesUserExist) {
             return Promise.reject({ status: 404, message: "User not found" });
           }
-          return selectGoalsByUser(
+          return selectSubgoalsByGoalId(
             username,
             formattedFromDate,
             formattedToDate
           );
         })
-        .then((goals: Goal[]) => {
-          res.status(200).send({ goals });
+        .then((subgoals: Subgoal[]) => {
+          res.status(200).send({ subgoals });
         })
         .catch(next);
     }
@@ -227,11 +227,11 @@ const getGoalsByUser = (req, res, next) => {
 };
 
 export {
-  postGoal,
-  deleteGoal,
-  getGoalByGoalId,
-  patchGoalDetails,
-  patchGoalStatus,
-  patchGoalProgress,
-  getGoalsByUser,
+  postSubgoal,
+  getSubgoalsByGoalId,
+  deleteSubgoal,
+  getSubgoalBySubgoalId,
+  patchSubgoalDetails,
+  patchSubgoalStatus,
+  patchSubgoalProgress,
 };
