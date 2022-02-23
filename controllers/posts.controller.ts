@@ -5,13 +5,33 @@ import {
   selectPostsByUserFriends,
 } from "../models/posts.model";
 
-import { checkGoalExists } from "../utils/checkExists";
+import { checkGoalExists, checkSubgoalExists } from "../utils/checkExists";
 
 export const postPost = (req, res, next) => {
   const { associated_data_type, associated_id, owner, datetime, message } =
     req.body;
 
-  checkGoalExists(associated_id);
+  switch (associated_data_type) {
+    case "goal":
+      return checkGoalExists(associated_id).then((res) => {
+        // console.log("CONTROLLER PROMISE CHECK");
+        if (res === 0) {
+          throw {
+            status: 400,
+            message: "Bad request, please submit a username",
+          };
+        }
+      });
+    case "subgoal":
+      return checkSubgoalExists(associated_id).then((res) => {
+        if (res === 0) {
+          throw {
+            status: 400,
+            message: "Bad request, please submit a username",
+          };
+        }
+      });
+  }
 
   return insertPost(
     associated_data_type,
