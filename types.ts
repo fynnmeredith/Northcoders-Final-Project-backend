@@ -40,4 +40,10 @@ interface CustomError {
   message: string;
 }
 
-export { ProgressPoint, CustomError, User, Goal, Subgoal };
+interface Friendship {
+  friendship_id: number;
+  user_1: string;
+  user_2: string;
+}
+
+export { ProgressPoint, CustomError, User, Goal, Subgoal, Friendship };

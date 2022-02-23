@@ -36,4 +36,21 @@ const checkSubgoalExists = (subgoal_id) => {
     });
 };
 
-export { checkGoalExists, checkUserExists, checkSubgoalExists };
+const checkFriendshipExists = (friendship_id) => {
+  return db
+    .query(
+      `SELECT * FROM friendships
+  WHERE friendship_id = $1;`,
+      [friendship_id]
+    )
+    .then((res) => {
+      return res.rows.length === 1;
+    });
+};
+
+export {
+  checkGoalExists,
+  checkUserExists,
+  checkSubgoalExists,
+  checkFriendshipExists,
+};

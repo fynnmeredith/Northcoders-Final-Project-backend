@@ -4,6 +4,8 @@ import { getGoalsByUser } from "../controllers/goals.controller";
 
 import { getSubgoalsByUser } from "../controllers/subgoals.controller";
 
+import { getFriendshipsbyUser } from "../controllers/friendships.controller";
+
 import {
   getUsers,
   postUser,
@@ -21,5 +23,7 @@ usersRouter.get("/:username", getUser);
 usersRouter.get("/:username/goals", getGoalsByUser);
 
 usersRouter.get("/:username/subgoals", getSubgoalsByUser);
+
+usersRouter.get("/:username/friendships", getFriendshipsbyUser);
 
 export { usersRouter };
