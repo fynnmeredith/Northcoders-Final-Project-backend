@@ -1,14 +1,26 @@
 import { db } from "../db/connection";
 
-export const selectUsers = () => {
-  return db
-    .query(`SELECT * FROM users;`)
-    .then((res) => {
-      return res.rows;
-    })
-    .catch((err) => {
-      return err;
-    });
+export const selectUsers = (searchTerm) => {
+  if (!searchTerm) {
+    return db
+      .query(`SELECT * FROM users;`)
+      .then((res) => {
+        return res.rows;
+      })
+      .catch((err) => {
+        return err;
+      });
+  } else {
+    return db
+      .query(`SELECT * FROM users WHERE username LIKE '%${searchTerm}%';`)
+      .then((res) => {
+        return res.rows;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+  }
 };
 
 export const insertUser = (username, profile) => {
