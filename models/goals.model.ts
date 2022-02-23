@@ -1,13 +1,14 @@
 import { db } from "../db/connection";
+import { ProgressPoint } from "../types";
 
 const insertGoal = (
-  objective: String,
-  description: String | undefined,
+  objective: string,
+  description: string | undefined,
   start_date: Date,
   end_date: Date,
-  owner: String,
-  target_value: Number | undefined,
-  unit: String | undefined
+  owner: string,
+  target_value: number | undefined,
+  unit: string | undefined
 ) => {
   const status = "active";
   let type = "boolean";
@@ -40,7 +41,7 @@ const insertGoal = (
   });
 };
 
-const deleteGoalFrom = (goal_id: Number) => {
+const deleteGoalFrom = (goal_id: number) => {
   return db.query(
     `DELETE FROM goals
       WHERE goal_id = $1;`,
@@ -48,7 +49,7 @@ const deleteGoalFrom = (goal_id: Number) => {
   );
 };
 
-const selectGoalByGoalId = (goal_id: Number) => {
+const selectGoalByGoalId = (goal_id: number) => {
   return db
     .query(
       `SELECT * FROM goals
@@ -65,9 +66,54 @@ const selectGoalByGoalId = (goal_id: Number) => {
 
 const updateGoalDetails = () => {};
 
-const updateGoalProgress = () => {};
+const updateGoalStatus = (
+  goal_id: number,
+  status: string,
+  finish_date: Date | undefined
+) => {
+  return db
+    .query(
+      `UPDATE goals
+  SET status = $1,
+  finish_date = $2
+  WHERE goal_id = $3
+  RETURNING *;`,
+      [status, finish_date, goal_id]
+    )
+    .then((res) => {
+      return res.rows[0];
+    });
+};
 
-const selectGoalsByUser = (username) => {
+const updateGoalProgress = (
+  goal_id: number,
+  date: Date,
+  value: number,
+  oldProgress: ProgressPoint[],
+  targetValue: number
+) => {
+  const latestValue = oldProgress[oldProgress.length - 1][1];
+  const newValue = latestValue + value;
+  const newProgress = oldProgress.map((progressPoint) => {
+    return [...progressPoint];
+  });
+  newProgress.push([new Date(date), newValue]);
+  const newProgressJson = JSON.stringify(newProgress);
+
+  return db
+    .query(
+      `UPDATE goals
+      SET progress = $1
+      WHERE goal_id = $2
+      RETURNING *;`,
+      [newProgressJson, goal_id]
+    )
+    .then((res) => {
+      return res.rows[0];
+    });
+};
+
+const selectGoalsByUser = (username: string) => {
   return db
     .query(
       `SELECT * FROM goals
@@ -84,6 +130,7 @@ export {
   deleteGoalFrom,
   selectGoalByGoalId,
   updateGoalDetails,
+  updateGoalStatus,
   updateGoalProgress,
   selectGoalsByUser,
 };

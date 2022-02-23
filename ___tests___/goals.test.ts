@@ -310,15 +310,210 @@ describe("/api/goals/:goal_id", () => {
   // });
 });
 
-describe("/api/goals/:goal_id/details", () => {
-  describe("PATCH", () => {
-    test("", () => {});
+// describe("/api/goals/:goal_id/details", () => {
+//   describe("PATCH", () => {
+//     test("patches successfully when valid goal_id and complete patch object are entered", () => {});
+//     test("patches successfully when valid goal_id and minimal patch object are entered", () => {});
+//     test("returns error when invalid goal_id is entered", () => {});
+//     test("returns error when non-existent goal_id is entered", () => {});
+//     test("returns error when patch object doesn't any valid keys", () => {});
+//     test("returns error when objective value is an empty string", () => {});
+//     test("returns error when start date is not a valid date", () => {});
+//     test("returns error when end date is not a valid date", () => {});
+//     test("returns error when start date is set after end date", () => {});
+//     test("returns error when end date is set before start date", () => {});
+//     test("patches successfully when both start date and end date are changed to be an entirely different range to previously", () => {});
+//     test("returns error if goal has subgoals that do not fit within new date range", () => {});
+//     test("returns error if target value is not a number", () => {});
+//   });
+// });
+
+describe("/api/goals/:goal_id/status", () => {
+  describe.only("PATCH", () => {
+    test("patches successfully when valid goal_id and patch object are entered", () => {
+      return request(app)
+        .patch("/api/goals/2/status")
+        .send({ status: "completed", date: new Date(2022, 1, 23) })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goal.goal_id).toBe(2);
+          expect(res.body.goal.status).toBe("completed");
+          expect(res.body.goal.finish_date).toBe("2022-02-23T00:00:00.000Z");
+        });
+    });
+    test("returns error when invalid goal_id is entered", () => {
+      return request(app)
+        .patch("/api/goals/two/status")
+        .send({ status: "completed", date: new Date(2022, 1, 23) })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when non-existent goal_id is entered", () => {
+      return request(app)
+        .patch("/api/goals/9999/status")
+        .send({ status: "completed", date: new Date(2022, 1, 23) })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.message).toBe("Goal not found");
+        });
+    });
+    test("returns error when patch object doesn't have status key", () => {
+      return request(app)
+        .patch("/api/goals/2/status")
+        .send({ date: new Date(2022, 1, 23) })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when patch object status has invalid value", () => {
+      return request(app)
+        .patch("/api/goals/2/status")
+        .send({ status: "todo", date: new Date(2022, 1, 23) })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when patch object doesn't have date key when patching to completed", () => {
+      return request(app)
+        .patch("/api/goals/2/status")
+        .send({ status: "completed" })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when patch object status has invalid date when patching to completed", () => {
+      return request(app)
+        .patch("/api/goals/2/status")
+        .send({ status: "completed", date: "today" })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("patches successfully when valid goal_id and patch object are entered without date key when patching to active", () => {
+      return request(app)
+        .patch("/api/goals/7/status")
+        .send({ status: "active" })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goal.goal_id).toBe(7);
+          expect(res.body.goal.status).toBe("active");
+          expect(res.body.goal.finish_date).toBe(null);
+        });
+    });
   });
 });
 
 describe("/api/goals/:goal_id/progress", () => {
   describe("PATCH", () => {
-    test("", () => {});
+    test("patches successfully when valid goal_id and patch object are entered", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ date: new Date(2022, 1, 22), value: 10 })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.goal.progress).toEqual([
+            ["2022-02-08T00:00:00.000Z", 10],
+            ["2022-02-08T00:00:00.000Z", 20],
+            ["2022-02-10T00:00:00.000Z", 30],
+            ["2022-02-15T00:00:00.000Z", 40],
+            ["2022-02-17T00:00:00.000Z", 50],
+            ["2022-02-22T00:00:00.000Z", 60],
+          ]);
+        });
+    });
+    test("returns error when invalid goal_id is input", () => {
+      return request(app)
+        .patch("/api/goals/one/progress")
+        .send({ date: new Date(2022, 1, 22), value: 10 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when non-existent goal_id is input", () => {
+      return request(app)
+        .patch("/api/goals/9999/progress")
+        .send({ date: new Date(2022, 1, 22), value: 10 })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.message).toBe("Goal not found");
+        });
+    });
+    test("returns error when patch object does not have date property", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ value: 10 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when patch object does not have value property", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ date: new Date(2022, 1, 22) })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when date property is not a valid date", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ date: "today", value: 10 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when value property is not a number", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ date: new Date(2022, 1, 22), value: "ten" })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe("Bad request");
+        });
+    });
+    test("returns error when goal trying to be patched is not `progress`-type", () => {
+      return request(app)
+        .patch("/api/goals/2/progress")
+        .send({ date: new Date(2022, 1, 22), value: 10 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe(
+            "Progress cannot be added to 'boolean' type goal"
+          );
+        });
+    });
+    test("returns error when date is before start date of goal", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ date: new Date(2022, 1, 1), value: 10 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe(
+            "Cannot add progress outside of date range of goal"
+          );
+        });
+    });
+    test("returns error when date is after end date of goal", () => {
+      return request(app)
+        .patch("/api/goals/1/progress")
+        .send({ date: new Date(2022, 3, 1), value: 10 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.message).toBe(
+            "Cannot add progress outside of date range of goal"
+          );
+        });
+    });
   });
 });
 
