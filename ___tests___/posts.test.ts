@@ -12,7 +12,6 @@ describe("Post social media post", () => {
     return request(app)
       .post("api/post")
       .send({
-        post_id: 71,
         associated_data_type: "Goal",
         associated_id: 3,
         owner: "Jeff",
@@ -23,7 +22,6 @@ describe("Post social media post", () => {
       .then((res) => {
         expect(res.body.post).toBeInstanceOf(Object);
         expect(res.body.post).toMatchObject({
-          post_id: 71,
           associated_data_type: expect.any(Number),
           associated_id: expect.any(Number),
           owner: expect.any(Number),
@@ -37,7 +35,6 @@ describe("Post social media post", () => {
     return request(app)
       .post("api/post")
       .send({
-        post_id: 72,
         associated_data_type: "Goal",
         associated_id: 666,
         owner: "Jeff",
@@ -46,7 +43,7 @@ describe("Post social media post", () => {
       })
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("Goal/Post ID Not Found");
+        expect(res.body.msg).toBe("Goal/Subgoal ID Not Found");
       });
   });
 
@@ -54,7 +51,6 @@ describe("Post social media post", () => {
     return request(app)
       .post("api/post")
       .send({
-        post_id: 72,
         associated_data_type: "Goal",
         associated_id: 2,
         owner: "Farquad",
@@ -80,7 +76,7 @@ describe("Post social media post", () => {
       })
       .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("Invalid goal type");
+        expect(res.body.msg).toBe("Bad request");
       });
   });
 });
@@ -114,14 +110,44 @@ describe("Delete social media post", () => {
 });
 
 describe("Get social media post by user, sort by date-time", () => {
-  describe("", () => {
-    test("", () => {});
+  test("", () => {
+    return request(app)
+      .get("api/post/jeff")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.posts).toBeInstanceOf(Array);
+        res.body.posts.forEach((post) => {
+          expect(post).toBeInstanceOf(Object);
+          expect(post).toMatchObject({
+            associated_data_type: expect.any(Number),
+            associated_id: expect.any(Number),
+            owner: expect.any(Number),
+            datetime: expect.any(String),
+            message: expect.any(Number),
+          });
+        });
+      });
   });
 });
 
 describe("Get social media post by friends, sort by date-time", () => {
-  describe("", () => {
-    test("", () => {});
+  test("", () => {
+    return request(app)
+      .get("api/posts/friendsPosts/jeff")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.posts).toBeInstanceOf(Array);
+        res.body.posts.forEach((post) => {
+          expect(post).toBeInstanceOf(Object);
+          expect(post).toMatchObject({
+            associated_data_type: expect.any(Number),
+            associated_id: expect.any(Number),
+            owner: expect.any(Number),
+            datetime: expect.any(String),
+            message: expect.any(Number),
+          });
+        });
+      });
   });
 });
 

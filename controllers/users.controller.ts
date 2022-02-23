@@ -8,7 +8,9 @@ import {
 import { requestKeyCheck } from "../utils/jvfuncs";
 
 export const getUsers = (req, res, next) => {
-  return selectUsers().then((users) => {
+  const searchTerm = req.query.search;
+
+  return selectUsers(searchTerm).then((users) => {
     res.status(200).send({ users });
   });
 };
@@ -42,8 +44,6 @@ export const postUser = (req, res, next) => {
 
 export const patchUser = (req, res, next) => {
   const { username, profile } = req.body;
-
-  console.log(username, profile);
 
   if (!username) {
     next({
@@ -80,10 +80,8 @@ export const patchUser = (req, res, next) => {
 
 export const getUser = (req, res, next) => {
   const { username } = req.params;
-  console.log("CONTROLLER GET USER", username);
 
   return selectUser(username).then((user) => {
-    console.log("controller checkpoint", user);
     res.status(200).send({ user });
   });
 };
