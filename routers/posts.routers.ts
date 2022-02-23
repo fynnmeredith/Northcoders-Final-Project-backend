@@ -1,21 +1,12 @@
 import express from "express";
 
-import {
-  getPostByUser,
-  postPost,
-  deletePost,
-  getPostByUserFriends,
-} from "../controllers/posts.controller";
+import { getPostsByUser, postPost } from "../controllers/posts.controller";
 
-const usersRouter = express.Router();
+const postsRouter = express.Router();
 
-usersRouter
-  .route("/")
-  .get(getPostByUser)
-  .post(postPost)
-  .patch()
-  .delete(deletePost);
+postsRouter.route("/").get(getPostsByUser).post(postPost);
 
-usersRouter.route("/friendsPosts/:user").get(getPostByUserFriends);
+//TBC
+// usersRouter.route("/friendsPosts/:user").get(getPostByUserFriends);
 
-export { usersRouter };
+export { postsRouter };
