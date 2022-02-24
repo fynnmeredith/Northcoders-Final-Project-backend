@@ -1,6 +1,6 @@
 import { db } from "../db/connection";
 
-const checkGoalExists = (goal_id) => {
+const checkGoalExists = (goal_id: number) => {
   return db
     .query(
       `SELECT * FROM goals
@@ -12,7 +12,7 @@ const checkGoalExists = (goal_id) => {
     });
 };
 
-const checkUserExists = (username) => {
+const checkUserExists = (username: number) => {
   return db
     .query(
       `SELECT * FROM users
@@ -24,7 +24,7 @@ const checkUserExists = (username) => {
     });
 };
 
-const checkSubgoalExists = (subgoal_id) => {
+const checkSubgoalExists = (subgoal_id: number) => {
   return db
     .query(
       `SELECT * FROM subgoals
@@ -36,7 +36,7 @@ const checkSubgoalExists = (subgoal_id) => {
     });
 };
 
-const checkFriendshipExists = (friendship_id) => {
+const checkFriendshipExists = (friendship_id: number) => {
   return db
     .query(
       `SELECT * FROM friendships
@@ -48,11 +48,11 @@ const checkFriendshipExists = (friendship_id) => {
     });
 };
 
-const checkReactionExists = (reaction_id) => {
+const checkReactionExists = (reaction_id: number) => {
   return db
     .query(
-      `SELECT * FROM friendships
-  WHERE friendship_id = $1;`,
+      `SELECT * FROM reactions
+  WHERE reaction_id = $1;`,
       [reaction_id]
     )
     .then((res) => {
@@ -60,7 +60,19 @@ const checkReactionExists = (reaction_id) => {
     });
 };
 
-const checkIfUsersAreFriends = (user_1, user_2) => {
+const checkPostExists = (post_id: number) => {
+  return db
+    .query(
+      `SELECT * FROM posts
+  WHERE post_id = $1;`,
+      [post_id]
+    )
+    .then((res) => {
+      return res.rows.length === 1;
+    });
+};
+
+const checkIfUsersAreFriends = (user_1: number, user_2: number) => {
   const user1FriendshipPromise = db.query(
     `SELECT * FROM friendships
       WHERE user_1 = $1
@@ -80,6 +92,19 @@ const checkIfUsersAreFriends = (user_1, user_2) => {
   );
 };
 
+const checkIfUserHasReacted = (post_id: number, username: string) => {
+  return db
+    .query(
+      `SELECT * FROM reactions
+      WHERE post_id = $1
+      AND owner = $2;`,
+      [post_id, username]
+    )
+    .then((res) => {
+      return res.rows.length > 0;
+    });
+};
+
 export {
   checkGoalExists,
   checkUserExists,
@@ -87,4 +112,6 @@ export {
   checkFriendshipExists,
   checkReactionExists,
   checkIfUsersAreFriends,
+  checkIfUserHasReacted,
+  checkPostExists,
 };
