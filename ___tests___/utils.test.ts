@@ -6,7 +6,7 @@ import * as request from "supertest";
 import {} from "ts-jest";
 import exp from "constants";
 
-import { requestKeyCheck } from "../utils/jvfuncs";
+import { requestKeyCheck } from "../utils/misc";
 
 describe("Util func check object keys", () => {
   describe("requestKeyCheck", () => {

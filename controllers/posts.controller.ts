@@ -5,13 +5,50 @@ import {
   selectPostsByUserFriends,
 } from "../models/posts.model";
 
-import { checkGoalExists } from "../utils/checkExists";
+import {
+  checkGoalExists,
+  checkSubgoalExists,
+  checkUserExists,
+} from "../utils/checkExists";
 
 export const postPost = (req, res, next) => {
   const { associated_data_type, associated_id, owner, datetime, message } =
     req.body;
 
-  checkGoalExists(associated_id);
+  switch (associated_data_type) {
+    case "goal":
+      return checkGoalExists(associated_id)
+        .then((res) => {
+          if (res === false) {
+            return Promise.reject({
+              status: 400,
+              message: "Bad request",
+            });
+          }
+        })
+        .catch(next);
+    case "subgoal":
+      return checkSubgoalExists(associated_id)
+        .then((res) => {
+          if (res === false) {
+            return Promise.reject({
+              status: 400,
+              message: "Bad request",
+            });
+          }
+        })
+        .catch(next);
+  }
+
+  return checkUserExists(owner).then((res) => {
+    console.log("YOOOO", res);
+    if (res === false) {
+      throw {
+        status: 400,
+        message: "Bad request",
+      };
+    }
+  });
 
   return insertPost(
     associated_data_type,
