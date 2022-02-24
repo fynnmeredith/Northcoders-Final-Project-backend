@@ -7,41 +7,53 @@ import {
   updateSubgoalStatus,
   updateSubgoalProgress,
   selectSubgoalsByGoalId,
+  selectSubgoalsByUser,
 } from "../models/subgoals.model";
-import { checkGoalExists, checkUserExists } from "../utils/checkExists";
+import {
+  checkGoalExists,
+  checkUserExists,
+  checkSubgoalExists,
+} from "../utils/checkExists";
 import { Subgoal } from "../types";
 
 const postSubgoal = (req, res, next) => {
-  const {
-    objective,
-    description,
-    start_date,
-    end_date,
-    owner,
-    target_value,
-    unit,
-  } = req.body;
+  const { objective, start_date, end_date, owner, target_value, unit } =
+    req.body;
 
-  if (!objective || !start_date || !end_date || !owner) {
+  const { goal_id } = req.params;
+
+  if (!objective || !end_date || !owner) {
     next({ status: 400, message: "Bad request" });
   } else if (target_value && typeof target_value !== "number") {
     next({ status: 400, message: "Bad request" });
   } else if (!target_value && unit) {
     next({ status: 400, message: "Bad request" });
+  } else if (!target_value && start_date) {
+    next({ status: 400, message: "Bad request" });
+  } else if (!start_date && target_value) {
+    next({ status: 400, message: "Bad request" });
+  } else if (!Number.isInteger(parseInt(goal_id))) {
+    next({ status: 400, message: "Bad request" });
   } else if (
-    new Date(start_date).toString() === "Invalid Date" ||
+    (start_date && new Date(start_date).toString() === "Invalid Date") ||
     new Date(end_date).toString() === "Invalid Date"
   ) {
     next({ status: 400, message: "Bad request" });
   } else {
     return checkUserExists(owner)
-      .then((doesUserExist) => {
+      .then((doesUserExist: boolean) => {
         if (!doesUserExist) {
           return Promise.reject({ status: 404, message: "User not found" });
         }
+        return checkGoalExists(goal_id);
+      })
+      .then((doesGoalExist: boolean) => {
+        if (!doesGoalExist) {
+          return Promise.reject({ status: 404, message: "Goal not found" });
+        }
         return insertSubgoal(
+          goal_id,
           objective,
-          description,
           start_date,
           end_date,
           owner,
@@ -57,17 +69,17 @@ const postSubgoal = (req, res, next) => {
 };
 
 const deleteSubgoal = (req, res, next) => {
-  const { goal_id } = req.params;
+  const { subgoal_id } = req.params;
 
-  if (!Number.isInteger(parseInt(goal_id))) {
+  if (!Number.isInteger(parseInt(subgoal_id))) {
     next({ status: 400, message: "Bad request" });
   } else {
-    return checkGoalExists(goal_id)
-      .then((doesGoalExist: Boolean) => {
-        if (!doesGoalExist) {
-          return Promise.reject({ status: 404, message: "Goal not found" });
+    return checkSubgoalExists(subgoal_id)
+      .then((doesSubgoalExist: Boolean) => {
+        if (!doesSubgoalExist) {
+          return Promise.reject({ status: 404, message: "Subgoal not found" });
         }
-        return deleteSubgoalFrom(goal_id);
+        return deleteSubgoalFrom(subgoal_id);
       })
       .then(() => {
         res.status(204).send();
@@ -77,12 +89,12 @@ const deleteSubgoal = (req, res, next) => {
 };
 
 const getSubgoalBySubgoalId = (req, res, next) => {
-  const { goal_id } = req.params;
+  const { subgoal_id } = req.params;
 
-  if (!Number.isInteger(parseInt(goal_id))) {
+  if (!Number.isInteger(parseInt(subgoal_id))) {
     next({ status: 400, message: "Bad request" });
   } else {
-    return selectSubgoalBySubgoalId(goal_id)
+    return selectSubgoalBySubgoalId(subgoal_id)
       .then((subgoal: Subgoal) => {
         res.status(200).send({ subgoal });
       })
@@ -93,10 +105,10 @@ const getSubgoalBySubgoalId = (req, res, next) => {
 const patchSubgoalDetails = (req, res, next) => {};
 
 const patchSubgoalStatus = (req, res, next) => {
-  const { goal_id } = req.params;
+  const { subgoal_id } = req.params;
   const { status, date } = req.body;
 
-  if (!Number.isInteger(parseInt(goal_id))) {
+  if (!Number.isInteger(parseInt(subgoal_id))) {
     next({ status: 400, message: "Bad request" });
   } else if (status !== "completed" && status !== "active") {
     next({ status: 400, message: "Bad request" });
@@ -106,12 +118,12 @@ const patchSubgoalStatus = (req, res, next) => {
   ) {
     next({ status: 400, message: "Bad request" });
   } else {
-    return checkGoalExists(goal_id)
-      .then((doesGoalExist: Boolean) => {
-        if (!doesGoalExist) {
-          return Promise.reject({ status: 404, message: "Goal not found" });
+    return checkSubgoalExists(subgoal_id)
+      .then((doesSubgoalExist: Boolean) => {
+        if (!doesSubgoalExist) {
+          return Promise.reject({ status: 404, message: "Subgoal not found" });
         }
-        return updateSubgoalStatus(goal_id, status, date);
+        return updateSubgoalStatus(subgoal_id, status, date);
       })
       .then((subgoal: Subgoal) => {
         res.status(200).send({ subgoal });
@@ -121,22 +133,25 @@ const patchSubgoalStatus = (req, res, next) => {
 };
 
 const patchSubgoalProgress = (req, res, next) => {
-  const { goal_id } = req.params;
+  const { subgoal_id } = req.params;
   const { date, value } = req.body;
 
   if (!date || !value) {
     next({ status: 400, message: "Bad request" });
-  } else if (isNaN(parseInt(value)) || !Number.isInteger(parseInt(goal_id))) {
+  } else if (
+    isNaN(parseInt(value)) ||
+    !Number.isInteger(parseInt(subgoal_id))
+  ) {
     next({ status: 400, message: "Bad request" });
   } else if (new Date(date).toString() === "Invalid Date") {
     next({ status: 400, message: "Bad request" });
   } else {
-    return selectSubgoalBySubgoalId(goal_id)
+    return selectSubgoalBySubgoalId(subgoal_id)
       .then((subgoal: Subgoal) => {
         if (subgoal.type === "boolean") {
           return Promise.reject({
             status: 400,
-            message: "Progress cannot be added to 'boolean' type goal",
+            message: "Progress cannot be added to 'boolean' type subgoal",
           });
         }
         if (
@@ -145,12 +160,12 @@ const patchSubgoalProgress = (req, res, next) => {
         ) {
           return Promise.reject({
             status: 400,
-            message: "Cannot add progress outside of date range of goal",
+            message: "Cannot add progress outside of date range of subgoal",
           });
         }
 
         return updateSubgoalProgress(
-          goal_id,
+          subgoal_id,
           date,
           value,
           subgoal.progress,
@@ -165,6 +180,25 @@ const patchSubgoalProgress = (req, res, next) => {
 };
 
 const getSubgoalsByGoalId = (req, res, next) => {
+  const { goal_id } = req.params;
+  if (!Number.isInteger(parseInt(goal_id))) {
+    next({ status: 400, message: "Bad request" });
+  } else {
+    return checkGoalExists(goal_id)
+      .then((doesGoalExist) => {
+        if (!doesGoalExist) {
+          return Promise.reject({ status: 404, message: "Goal not found" });
+        }
+        return selectSubgoalsByGoalId(goal_id);
+      })
+      .then((subgoals: Subgoal[]) => {
+        res.status(200).send({ subgoals });
+      })
+      .catch(next);
+  }
+};
+
+const getSubgoalsByUser = (req, res, next) => {
   const { username } = req.params;
   const { from_date, to_date } = req.query;
 
@@ -212,7 +246,7 @@ const getSubgoalsByGoalId = (req, res, next) => {
           if (!doesUserExist) {
             return Promise.reject({ status: 404, message: "User not found" });
           }
-          return selectSubgoalsByGoalId(
+          return selectSubgoalsByUser(
             username,
             formattedFromDate,
             formattedToDate
@@ -234,4 +268,5 @@ export {
   patchSubgoalDetails,
   patchSubgoalStatus,
   patchSubgoalProgress,
+  getSubgoalsByUser,
 };

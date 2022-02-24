@@ -59,7 +59,7 @@ const selectGoalByGoalId = (goal_id: number) => {
     )
     .then((res) => {
       if (res.rows.length === 0) {
-        throw { status: 404, message: "Goal not found" };
+        return Promise.reject({ status: 404, message: "Goal not found" });
       }
       return res.rows[0];
     });
