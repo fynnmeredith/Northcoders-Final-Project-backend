@@ -139,7 +139,7 @@ describe.skip("Delete social media post", () => {
 });
 
 describe("Get social media post by user, sort by date-time", () => {
-  test("Get social media posts works", () => {
+  test.only("Get social media posts by user works", () => {
     return request(app)
       .get("/api/posts/jeff")
       .expect(200)
