@@ -4,6 +4,7 @@ import { usersRouter } from "./users.routers";
 import { goalsRouter } from "./goals.routers";
 import { subgoalsRouter } from "./subgoals.routers";
 import { postsRouter } from "./posts.routers";
+import { commentsRouter } from "./comments.routers";
 import { reactionsRouter } from "./reactions.routers";
 import { friendshipsRouter } from "./friendships.routers";
 
@@ -13,7 +14,8 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/goals", goalsRouter);
 apiRouter.use("/subgoals", subgoalsRouter);
 apiRouter.use("/posts", postsRouter);
-apiRouter.user("/reactions", reactionsRouter);
+apiRouter.use("/comments", commentsRouter);
+apiRouter.use("/reactions", reactionsRouter);
 apiRouter.use("/friendships", friendshipsRouter);
 
 export { apiRouter };
