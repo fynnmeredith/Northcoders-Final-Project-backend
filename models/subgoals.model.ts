@@ -3,9 +3,9 @@ import { ProgressPoint } from "../types";
 import { formatDate } from "../utils/format";
 
 const insertSubgoal = (
+  goal_id: number,
   objective: string,
-  description: string | undefined,
-  start_date: Date,
+  start_date: Date | undefined,
   end_date: Date,
   owner: string,
   target_value: number | undefined,
@@ -18,15 +18,15 @@ const insertSubgoal = (
     type = "progress";
     progress = JSON.stringify([[]]);
   }
-  const query = `INSERT INTO goals
-      (objective, description, start_date, end_date, type, status, owner, target_value, unit, progress)
-      VALUES
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      RETURNING *;
-    `;
+  const query = `INSERT INTO subgoals
+        (goal_id, objective, start_date, end_date, type, status, owner, target_value, unit, progress)
+        VALUES
+        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING *;
+      `;
   const values = [
+    goal_id,
     objective,
-    description,
     formatDate(start_date),
     formatDate(end_date),
     type,
@@ -42,24 +42,24 @@ const insertSubgoal = (
   });
 };
 
-const deleteSubgoalFrom = (goal_id: number) => {
+const deleteSubgoalFrom = (subgoal_id: number) => {
   return db.query(
-    `DELETE FROM goals
-      WHERE goal_id = $1;`,
-    [goal_id]
+    `DELETE FROM subgoals
+      WHERE subgoal_id = $1;`,
+    [subgoal_id]
   );
 };
 
-const selectSubgoalBySubgoalId = (goal_id: number) => {
+const selectSubgoalBySubgoalId = (subgoal_id: number) => {
   return db
     .query(
-      `SELECT * FROM goals
-        WHERE goal_id = $1;`,
-      [goal_id]
+      `SELECT * FROM subgoals
+        WHERE subgoal_id = $1;`,
+      [subgoal_id]
     )
     .then((res) => {
       if (res.rows.length === 0) {
-        throw { status: 404, message: "Goal not found" };
+        throw { status: 404, message: "Subgoal not found" };
       }
       return res.rows[0];
     });
@@ -68,18 +68,18 @@ const selectSubgoalBySubgoalId = (goal_id: number) => {
 const updateSubgoalDetails = () => {};
 
 const updateSubgoalStatus = (
-  goal_id: number,
+  subgoal_id: number,
   status: string,
   finish_date: Date | undefined
 ) => {
   return db
     .query(
-      `UPDATE goals
+      `UPDATE subgoals
   SET status = $1,
   finish_date = $2
-  WHERE goal_id = $3
+  WHERE subgoal_id = $3
   RETURNING *;`,
-      [status, finish_date, goal_id]
+      [status, finish_date, subgoal_id]
     )
     .then((res) => {
       return res.rows[0];
@@ -87,7 +87,7 @@ const updateSubgoalStatus = (
 };
 
 const updateSubgoalProgress = (
-  goal_id: number,
+  subgoal_id: number,
   date: Date,
   value: number,
   oldProgress: ProgressPoint[],
@@ -103,42 +103,72 @@ const updateSubgoalProgress = (
 
   return db
     .query(
-      `UPDATE goals
+      `UPDATE subgoals
       SET progress = $1
-      WHERE goal_id = $2
+      WHERE subgoal_id = $2
       RETURNING *;`,
-      [newProgressJson, goal_id]
+      [newProgressJson, subgoal_id]
     )
     .then((res) => {
       return res.rows[0];
     });
 };
 
-const selectSubgoalsByGoalId = (
-  username: string,
-  fromDate: Date | undefined,
-  toDate: Date | undefined
-) => {
-  let dateLine: string | undefined;
-  if (fromDate && !toDate) {
-    dateLine = ` AND end_date >= '${formatDate(fromDate)}'::date`;
-  } else if (toDate && !fromDate) {
-    dateLine = ` AND start_date <= '${formatDate(toDate)}'::date`;
-  } else if (toDate && fromDate) {
-    dateLine = ` AND end_date >= '${formatDate(
-      fromDate
-    )}'::date AND start_date <= '${formatDate(toDate)}'::date`;
-  }
+const selectSubgoalsByGoalId = (goal_id: number) => {
   return db
     .query(
-      `SELECT * FROM goals
-      WHERE owner = $1
-      ${dateLine ? dateLine : ""};`,
-      [username]
+      `SELECT * FROM subgoals
+      WHERE goal_id = $1;`,
+      [goal_id]
     )
     .then((res) => {
       return res.rows;
     });
+};
+
+const selectSubgoalsByUser = (
+  username: string,
+  fromDate: Date | undefined,
+  toDate: Date | undefined
+) => {
+  let dateLineProgress: string | undefined;
+  let dateLineBoolean: string | undefined;
+  if (fromDate && !toDate) {
+    dateLineProgress = ` AND end_date >= '${formatDate(fromDate)}'::date`;
+    dateLineBoolean = ` AND end_date >= '${formatDate(fromDate)}'::date`;
+  } else if (toDate && !fromDate) {
+    dateLineProgress = ` AND start_date <= '${formatDate(toDate)}'::date`;
+    dateLineBoolean = ` AND end_date <= '${formatDate(toDate)}'::date`;
+  } else if (toDate && fromDate) {
+    dateLineProgress = ` AND end_date >= '${formatDate(
+      fromDate
+    )}'::date AND start_date <= '${formatDate(toDate)}'::date`;
+    dateLineBoolean = ` AND end_date >= '${formatDate(
+      fromDate
+    )}'::date AND end_date <= '${formatDate(toDate)}'::date`;
+  }
+
+  const progressQuery = db.query(
+    `SELECT * FROM subgoals
+      WHERE owner = $1
+      AND type = 'progress'
+      ${dateLineProgress ? dateLineProgress : ""};`,
+    [username]
+  );
+  const booleanQuery = db.query(
+    `SELECT * FROM subgoals
+      WHERE owner = $1
+      AND type = 'boolean'
+      ${dateLineBoolean ? dateLineBoolean : ""};`,
+    [username]
+  );
+
+  return Promise.all([progressQuery, booleanQuery]).then(
+    ([progressResponse, booleanResponse]) => {
+      const res = [...progressResponse.rows, ...booleanResponse.rows];
+      return res;
+    }
+  );
 };
 
 export {
@@ -149,4 +179,5 @@ export {
   updateSubgoalStatus,
   updateSubgoalProgress,
   selectSubgoalsByGoalId,
+  selectSubgoalsByUser,
 };
