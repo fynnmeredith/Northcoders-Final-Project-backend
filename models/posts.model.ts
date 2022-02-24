@@ -30,9 +30,12 @@ export const removePost = (post_id) => {
 
 export const selectPostsByUser = (owner) => {
   return db
-    .query(`SELECT * FROM posts WHERE owner=($1);`, owner)
+    .query(`SELECT * FROM posts WHERE owner=($1) ORDER BY datetime DESC;`, [
+      owner,
+    ])
     .then((res) => {
-      return res;
+      console.log("MODEL CHECKPOINT", res.rows);
+      return res.rows;
     });
 };
 
