@@ -46,4 +46,19 @@ interface Friendship {
   user_2: string;
 }
 
-export { ProgressPoint, CustomError, User, Goal, Subgoal, Friendship };
+interface Reaction {
+  reaction_id: number;
+  post_id: number;
+  owner: string;
+  reaction: string;
+}
+
+export {
+  ProgressPoint,
+  CustomError,
+  User,
+  Goal,
+  Subgoal,
+  Friendship,
+  Reaction,
+};

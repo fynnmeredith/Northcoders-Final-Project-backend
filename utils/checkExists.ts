@@ -48,6 +48,18 @@ const checkFriendshipExists = (friendship_id) => {
     });
 };
 
+const checkReactionExists = (reaction_id) => {
+  return db
+    .query(
+      `SELECT * FROM friendships
+  WHERE friendship_id = $1;`,
+      [reaction_id]
+    )
+    .then((res) => {
+      return res.rows.length === 1;
+    });
+};
+
 const checkIfUsersAreFriends = (user_1, user_2) => {
   const user1FriendshipPromise = db.query(
     `SELECT * FROM friendships
@@ -73,5 +85,6 @@ export {
   checkUserExists,
   checkSubgoalExists,
   checkFriendshipExists,
+  checkReactionExists,
   checkIfUsersAreFriends,
 };

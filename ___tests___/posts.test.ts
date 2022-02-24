@@ -15,7 +15,7 @@ describe("Post social media post", () => {
         associated_data_type: "goal",
         associated_id: 3,
         owner: "jeff",
-        // datetime: new Date(2022, 1, 23, 15, 24, 0),
+        datetime: new Date(2022, 1, 23, 15, 24, 0),
         message: "Jeff Post social media post test",
       })
       .expect(200)
@@ -25,7 +25,7 @@ describe("Post social media post", () => {
           associated_data_type: "goal",
           associated_id: 3,
           owner: "jeff",
-          // datetime: new Date(2022, 1, 23, 15, 24, 0),
+          datetime: new Date(2022, 1, 23, 15, 24, 0),
           message: "Jeff Post social media post test",
         });
       });
