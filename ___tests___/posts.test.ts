@@ -7,7 +7,7 @@ import {} from "ts-jest";
 
 beforeEach(() => seed(testData));
 
-describe.only("Post social media post", () => {
+describe("Post social media post", () => {
   test("Post social media post returns expected object data type", () => {
     return request(app)
       .post("/api/posts")
@@ -79,16 +79,28 @@ describe.only("Post social media post", () => {
       });
   });
 
-  test.skip("Post social media error, data type not of goal/subgoal type", () => {
+  test("Post social media error, data type not of goal/subgoal type", () => {
     return request(app)
       .post("/api/posts")
       .send({
-        post_id: 72,
         associated_data_type: "running",
         associated_id: 2,
         owner: "Jeff",
         datetime: new Date(),
         message: "Jeff Post social media post test",
+      })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.message).toBe("Bad request");
+      });
+  });
+  test("Post social media error, request body missing required keys", () => {
+    return request(app)
+      .post("/api/posts")
+      .send({
+        associated_data_type: "goal",
+        associated_id: 2,
+        message: "Test social media message",
       })
       .expect(400)
       .then((res) => {
@@ -127,22 +139,31 @@ describe.skip("Delete social media post", () => {
 });
 
 describe("Get social media post by user, sort by date-time", () => {
-  test("", () => {
+  test("Get social media posts works", () => {
     return request(app)
       .get("/api/posts/jeff")
       .expect(200)
       .then((res) => {
+        console.log(res.body.posts);
         expect(res.body.posts).toBeInstanceOf(Array);
         res.body.posts.forEach((post) => {
           expect(post).toBeInstanceOf(Object);
           expect(post).toMatchObject({
-            associated_data_type: expect.any(Number),
+            associated_data_type: expect.any(String),
             associated_id: expect.any(Number),
-            owner: expect.any(Number),
+            owner: expect.any(String),
             datetime: expect.any(String),
-            message: expect.any(Number),
+            message: expect.any(String),
           });
         });
+      });
+  });
+  test("Get social media post throws error for non existent user", () => {
+    return request(app)
+      .get("/api/posts/farquad")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.message).toBe("Bad request");
       });
   });
 });
