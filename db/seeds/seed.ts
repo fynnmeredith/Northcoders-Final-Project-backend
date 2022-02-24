@@ -45,7 +45,8 @@ const seed = (data) => {
       return db.query(`
       CREATE TABLE users (
         username VARCHAR(25) PRIMARY KEY,
-        profile VARCHAR(300)
+        profile VARCHAR(300),
+        avatar_url VARCHAR(500)
       );`);
     })
     .then(() => {
@@ -139,7 +140,7 @@ const seed = (data) => {
     .then(() => {
       const query = format(
         `INSERT INTO users
-          (username, profile)
+          (username, profile, avatar_url)
           VALUES
           %L;`,
         formatUsers(userData)

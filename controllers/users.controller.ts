@@ -16,7 +16,7 @@ export const getUsers = (req, res, next) => {
 };
 
 export const postUser = (req, res, next) => {
-  const { username, profile } = req.body;
+  const { username, profile, avatar_url } = req.body;
 
   if (username.length === 0) {
     throw { status: 400, message: "Bad request, please submit a username" };
@@ -28,7 +28,14 @@ export const postUser = (req, res, next) => {
     };
   }
 
-  return insertUser(username, profile)
+  if (profile === undefined && avatar_url === undefined) {
+    throw {
+      status: 400,
+      message: "Bad request",
+    };
+  }
+
+  return insertUser(username, profile, avatar_url)
     .then((user) => {
       res.status(200).send({ user: user });
     })
@@ -43,25 +50,32 @@ export const postUser = (req, res, next) => {
 };
 
 export const patchUser = (req, res, next) => {
-  const { username, profile } = req.body;
+  const { username, profile, avatar_url } = req.body;
 
   if (!username) {
     next({
       status: 400,
       message: "Bad request",
     });
-  }
-  if (requestKeyCheck(req.body, "profile") === false) {
+  } else if (profile === undefined && avatar_url === undefined) {
     next({ status: 400, message: "Bad request" });
-  }
+  } else {
+    // if (profile === undefined) {
+    //   const profile = selectUser(username).body.user[0].profile;
+    // }
+    // if (avatar_url === undefined) {
+    //   console.log(selectUser(username).body);
+    //   const avatar_url = selectUser(username).body.user[0].avatar_url;
+    // }
 
-  return modifyUser(username, profile)
-    .then((user) => {
-      res.status(200).send({ user });
-    })
-    .catch((err) => {
-      next(err);
-    });
+    return modifyUser(username, profile, avatar_url)
+      .then((user) => {
+        res.status(200).send({ user });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  }
 };
 
 // DELETE USER TBC

@@ -85,11 +85,28 @@ describe("/api/users GET all users", () => {
   });
 });
 
-describe("/api/users  POST USER", () => {
-  test("Post new user works", () => {
+describe("/api/users POST USER", () => {
+  test("Post new user works, without avatar url provided", () => {
     return request(app)
       .post("/api/users")
       .send({ username: "test", profile: "string url" })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.user[0]).toBeInstanceOf(Object);
+        expect(res.body.user[0]).toMatchObject({
+          username: expect.any(String),
+          profile: expect.any(String),
+        });
+      });
+  });
+  test("Post new user works, with avatar_url provided", () => {
+    return request(app)
+      .post("/api/users")
+      .send({
+        username: "test",
+        profile: "string url",
+        avatar_url: "urltesteryea",
+      })
       .expect(200)
       .then((res) => {
         expect(res.body.user[0]).toBeInstanceOf(Object);
@@ -145,31 +162,66 @@ describe("/api/users  POST USER", () => {
 });
 
 //TBC IF PROFILE IMG URL IS STORED VIA AUTHENTICATION
-describe("/api/users post user profile works", () => {
-  test("Post user profile works", () => {
+describe.only("/api/users patch user profile works", () => {
+  test("patch user profile works, without avatar_url", () => {
     return request(app)
       .patch("/api/users")
       .send({ username: "jeff", profile: "stringurl" })
       .expect(200)
       .then((res) => {
-        console.log("TEST POINT", res);
         expect(res.body.user[0]).toBeInstanceOf(Object);
         expect(res.body.user[0]).toMatchObject({
+          username: expect.any(String),
           profile: expect.any(String),
+          avatar_url: null,
         });
       });
   });
-  test("Post user profile request with missing username throws error", () => {
+  test("patch user profile works, with avatar_url and profile", () => {
+    return request(app)
+      .patch("/api/users")
+      .send({
+        username: "jeff",
+        profile: "stringurl",
+        avatar_url: "https://testavatarurl.com",
+      })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.user[0]).toBeInstanceOf(Object);
+        expect(res.body.user[0]).toMatchObject({
+          username: expect.any(String),
+          profile: expect.any(String),
+          avatar_url: expect.any(String),
+        });
+      });
+  });
+  test("patch user profile works, without profile", () => {
+    return request(app)
+      .patch("/api/users")
+      .send({
+        username: "jeff",
+        avatar_url: "https://testavatarurl.com",
+      })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.user[0]).toBeInstanceOf(Object);
+        expect(res.body.user[0]).toMatchObject({
+          username: expect.any(String),
+          profile: expect.any(String),
+          avatar_url: expect.any(String),
+        });
+      });
+  });
+  test("patch user profile request with missing username throws error", () => {
     return request(app)
       .patch("/api/users")
       .send({ username: "", profile: "test profile change" })
       .expect(400)
       .then((res) => {
-        console.log(res);
         expect(res.body.message).toBe("Bad request");
       });
   });
-  test("Post user profile request with missing profile key throws error", () => {
+  test("patch user profile request with missing profile key throws error", () => {
     return request(app)
       .patch("/api/users")
       .send({ username: "newusertest" })
@@ -206,7 +258,6 @@ describe("/api/user/:username", () => {
         .get("/api/users/jeff")
         .expect(200)
         .then((res) => {
-          console.log("TEST CHECKPOINT", res.body.user);
           expect(res.body.user[0]).toBeInstanceOf(Object);
           expect(res.body.user[0]).toMatchObject({
             username: "jeff",
