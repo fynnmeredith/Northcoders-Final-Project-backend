@@ -5,7 +5,7 @@ import {
   selectUser,
 } from "../models/users.model";
 
-import { requestKeyCheck } from "../utils/jvfuncs";
+import { requestKeyCheck } from "../utils/misc";
 
 export const getUsers = (req, res, next) => {
   const searchTerm = req.query.search;
