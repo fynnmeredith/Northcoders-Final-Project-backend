@@ -31,7 +31,7 @@ describe.only("Post social media post", () => {
       });
   });
 
-  test.only("Post social media error, non-existent goal/subgoal id", () => {
+  test("Post social media error, non-existent goal id", () => {
     return request(app)
       .post("/api/posts")
       .send({
@@ -43,7 +43,23 @@ describe.only("Post social media post", () => {
       })
       .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad request");
+        expect(res.body.message).toBe("Bad request");
+      });
+  });
+
+  test("Post social media error, non-existent subgoal id", () => {
+    return request(app)
+      .post("/api/posts")
+      .send({
+        associated_data_type: "subgoal",
+        associated_id: 666,
+        owner: "jeff",
+        datetime: new Date(),
+        message: "Jeff Post social media post test",
+      })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.message).toBe("Bad request");
       });
   });
 
@@ -57,13 +73,13 @@ describe.only("Post social media post", () => {
         datetime: new Date(),
         message: "Farquad Post social media post test",
       })
-      .expect(404)
+      .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("User Not Found");
+        expect(res.body.message).toBe("Bad request");
       });
   });
 
-  test("Post social media error, data type not of goal/subgoal type", () => {
+  test.skip("Post social media error, data type not of goal/subgoal type", () => {
     return request(app)
       .post("/api/posts")
       .send({
@@ -76,7 +92,7 @@ describe.only("Post social media post", () => {
       })
       .expect(400)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad request");
+        expect(res.body.message).toBe("Bad request");
       });
   });
 });
@@ -105,7 +121,7 @@ describe.skip("Delete social media post", () => {
       .delete("/api/posts/666")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("Post not found");
+        expect(res.body.message).toBe("Post not found");
       });
   });
 });
