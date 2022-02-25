@@ -1,3 +1,4 @@
+import { Console } from "console";
 import { db } from "../db/connection";
 
 export const selectUsers = (searchTerm) => {
@@ -23,23 +24,24 @@ export const selectUsers = (searchTerm) => {
   }
 };
 
-export const insertUser = (username, profile) => {
+export const insertUser = (username, profile, avatar_url) => {
   return db
-    .query(`INSERT INTO users (username,profile) VALUES ($1,$2) RETURNING *`, [
-      username,
-      profile,
-    ])
+    .query(
+      `INSERT INTO users (username,profile,avatar_url) VALUES ($1,$2,$3) RETURNING *`,
+      [username, profile, avatar_url]
+    )
     .then((res) => {
       // console.log(res.rows);
       return res.rows;
     });
 };
 
-export const modifyUser = (username, profile) => {
+export const modifyUser = (username, profile, avatar_url) => {
+  console.log("MODEL CHECKPOINT", username, profile, avatar_url);
   return db
     .query(
-      `UPDATE users SET profile = ($2) WHERE  username =($1) RETURNING *;`,
-      [username, profile]
+      `UPDATE users SET profile = ($2), avatar_url=($3) WHERE  username =($1) RETURNING *;`,
+      [username, profile, avatar_url]
     )
     .then((res) => {
       return res.rows;
@@ -61,7 +63,6 @@ export const selectUser = (username) => {
       username,
     ])
     .then((res) => {
-      console.log("Model checkpoint", res.rows);
       return res.rows;
     });
 };

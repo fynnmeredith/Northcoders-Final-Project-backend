@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+exports.__esModule = true;
+exports.apiRouter = void 0;
+var express_1 = __importDefault(require("express"));
+var users_routers_1 = require("./users.routers");
+var goals_routers_1 = require("./goals.routers");
+var subgoals_routers_1 = require("./subgoals.routers");
+var posts_routers_1 = require("./posts.routers");
+var comments_routers_1 = require("./comments.routers");
+var reactions_routers_1 = require("./reactions.routers");
+var friendships_routers_1 = require("./friendships.routers");
+var apiRouter = express_1["default"].Router();
+exports.apiRouter = apiRouter;
+apiRouter.use("/users", users_routers_1.usersRouter);
+apiRouter.use("/goals", goals_routers_1.goalsRouter);
+apiRouter.use("/subgoals", subgoals_routers_1.subgoalsRouter);
+apiRouter.use("/posts", posts_routers_1.postsRouter);
+apiRouter.use("/comments", comments_routers_1.commentsRouter);
+apiRouter.use("/reactions", reactions_routers_1.reactionsRouter);
+apiRouter.use("/friendships", friendships_routers_1.friendshipsRouter);

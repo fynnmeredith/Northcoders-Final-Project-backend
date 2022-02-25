@@ -32,8 +32,8 @@ export const postPost = (req, res, next) => {
       switch (associated_data_type) {
         case "goal":
           return checkGoalExists(associated_id)
-            .then((res) => {
-              if (res === false) {
+            .then((doesGoalExist) => {
+              if (doesGoalExist === false) {
                 return Promise.reject({
                   status: 400,
                   message: "Bad request",
@@ -43,8 +43,8 @@ export const postPost = (req, res, next) => {
             .catch(next);
         case "subgoal":
           return checkSubgoalExists(associated_id)
-            .then((res) => {
-              if (res === false) {
+            .then((doesSubgoalExist: boolean) => {
+              if (doesSubgoalExist === false) {
                 return Promise.reject({
                   status: 400,
                   message: "Bad request",
@@ -86,47 +86,6 @@ export const postPost = (req, res, next) => {
       console.log(err);
       next(err);
     });
-
-  // switch (associated_data_type) {
-  //   case "goal":
-  //     return checkGoalExists(associated_id)
-  //       .then((res) => {
-  //         if (res === false) {
-  //           return Promise.reject({
-  //             status: 400,
-  //             message: "Bad request",
-  //           });
-  //         }
-  //       })
-  //       .catch(next);
-  //   case "subgoal":
-  //     return checkSubgoalExists(associated_id)
-  //       .then((res) => {
-  //         if (res === false) {
-  //           return Promise.reject({
-  //             status: 400,
-  //             message: "Bad request",
-  //           });
-  //         }
-  //       })
-  //       .catch(next);
-  // }
-
-  // return insertPost(
-  //   associated_data_type,
-  //   associated_id,
-  //   owner,
-  //   datetime,
-  //   message
-  // )
-  //   .then((post) => {
-  //     console.log(post);
-  //     res.status(200).send({ post });
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     next(err);
-  //   });
 };
 
 // TBC

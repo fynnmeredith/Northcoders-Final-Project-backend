@@ -25,7 +25,7 @@ describe("Post social media post", () => {
           associated_data_type: "goal",
           associated_id: 3,
           owner: "jeff",
-          datetime: new Date(2022, 1, 23, 15, 24, 0),
+          datetime: "2022-02-23T15:24:00.000Z",
           message: "Jeff Post social media post test",
         });
       });
@@ -139,7 +139,7 @@ describe.skip("Delete social media post", () => {
 });
 
 describe("Get social media post by user, sort by date-time", () => {
-  test.only("Get social media posts by user works", () => {
+  test("Get social media posts by user works", () => {
     return request(app)
       .get("/api/posts/jeff")
       .expect(200)
