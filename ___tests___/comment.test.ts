@@ -33,7 +33,7 @@ export {};
 //           message: expect.any(String),
 //         });
 //       });
-=======
+
 describe("/api/comments gets all comments for a post", () => {
   test("successfully gets comments when valid id is entered", () => {
     return request(app)

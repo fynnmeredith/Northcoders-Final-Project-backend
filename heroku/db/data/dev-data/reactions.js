@@ -5,28 +5,28 @@ exports.reactionData = void 0;
 var reactionData = [
     {
         post_id: 1,
-        owner: 'susan',
-        reaction: 'Like'
+        owner: "susan",
+        reaction: "I'm proud of you"
     },
     {
         post_id: 1,
-        owner: 'mary',
-        reaction: 'Dislike'
+        owner: "mary",
+        reaction: "Keep on going"
     },
     {
         post_id: 1,
-        owner: 'mahmood',
-        reaction: 'Star'
+        owner: "stuart",
+        reaction: "Congratulations!"
     },
     {
         post_id: 5,
-        owner: 'martina',
-        reaction: 'Like'
+        owner: "mahmood",
+        reaction: "Awesome!"
     },
     {
         post_id: 5,
-        owner: 'jeff',
-        reaction: 'Like'
-    }
+        owner: "stuart",
+        reaction: "Awesome!"
+    },
 ];
 exports.reactionData = reactionData;

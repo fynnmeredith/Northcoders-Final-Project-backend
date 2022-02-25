@@ -4,35 +4,45 @@ exports.getReactionsByPost = exports.deleteReaction = exports.postReaction = voi
 var reactions_model_1 = require("../models/reactions.model");
 var checkExists_1 = require("../utils/checkExists");
 var postReaction = function (req, res, next) {
-    var _a = req.body, user_1 = _a.user_1, user_2 = _a.user_2;
-    if (!user_1 || !user_2) {
+    var post_id = req.params.post_id;
+    var _a = req.body, owner = _a.owner, reaction = _a.reaction;
+    var validReactions = [
+        "Congratulations!",
+        "Awesome!",
+        "Keep on going",
+        "I'm proud of you",
+    ];
+    if (!owner || !reaction) {
         next({ status: 400, message: "Bad request" });
     }
-    else if (user_1 === user_2) {
-        next({ status: 400, message: "User cannot befriend themselves" });
+    else if (!validReactions.includes(reaction)) {
+        next({ status: 400, message: "Reaction not valid" });
+    }
+    else if (!Number.isInteger(parseInt(post_id))) {
+        next({ status: 400, message: "Bad request" });
     }
     else {
-        return (0, checkExists_1.checkUserExists)(user_1)
-            .then(function (doesUser1Exist) {
-            if (!doesUser1Exist) {
-                return Promise.reject({ status: 404, message: "User 1 not found" });
+        return (0, checkExists_1.checkPostExists)(post_id)
+            .then(function (doesPostExist) {
+            if (!doesPostExist) {
+                return Promise.reject({ status: 404, message: "Post not found" });
             }
-            return (0, checkExists_1.checkUserExists)(user_2);
+            return (0, checkExists_1.checkUserExists)(owner);
         })
-            .then(function (doesUser2Exist) {
-            if (!doesUser2Exist) {
-                return Promise.reject({ status: 404, message: "User 2 not found" });
+            .then(function (doesUserExist) {
+            if (!doesUserExist) {
+                return Promise.reject({ status: 404, message: "User not found" });
             }
-            return (0, checkExists_1.checkIfUsersAreFriends)(user_1, user_2);
+            return (0, checkExists_1.checkIfUserHasReacted)(post_id, owner);
         })
-            .then(function (areUsersFriends) {
-            if (areUsersFriends) {
+            .then(function (hasUserReacted) {
+            if (hasUserReacted) {
                 return Promise.reject({
                     status: 400,
-                    message: "Users are already friends"
+                    message: "Cannot react to post user has already reacted to"
                 });
             }
-            return (0, reactions_model_1.insertReaction)(user_1, user_2);
+            return (0, reactions_model_1.insertReaction)(post_id, owner, reaction);
         })
             .then(function (reaction) {
             res.status(200).send({ reaction: reaction });
@@ -41,20 +51,20 @@ var postReaction = function (req, res, next) {
 };
 exports.postReaction = postReaction;
 var deleteReaction = function (req, res, next) {
-    var friendship_id = req.params.friendship_id;
-    if (!Number.isInteger(parseInt(friendship_id))) {
+    var reaction_id = req.params.reaction_id;
+    if (!Number.isInteger(parseInt(reaction_id))) {
         next({ status: 400, message: "Bad request" });
     }
     else {
-        return (0, checkExists_1.checkFriendshipExists)(friendship_id)
-            .then(function (doesFriendshipExist) {
-            if (!doesFriendshipExist) {
+        return (0, checkExists_1.checkReactionExists)(reaction_id)
+            .then(function (doesReactionExist) {
+            if (!doesReactionExist) {
                 return Promise.reject({
                     status: 404,
-                    message: "Friendship not found"
+                    message: "Reaction not found"
                 });
             }
-            return (0, reactions_model_1.deleteReactionFrom)(friendship_id);
+            return (0, reactions_model_1.deleteReactionFrom)(reaction_id);
         })
             .then(function () {
             res.status(204).send();
@@ -63,16 +73,21 @@ var deleteReaction = function (req, res, next) {
 };
 exports.deleteReaction = deleteReaction;
 var getReactionsByPost = function (req, res, next) {
-    var username = req.params.username;
-    return (0, checkExists_1.checkUserExists)(username)
-        .then(function (doesUserExist) {
-        if (!doesUserExist) {
-            return Promise.reject({ status: 404, message: "User not found" });
-        }
-        return (0, reactions_model_1.selectReactionsByPost)(username);
-    })
-        .then(function (reactions) {
-        res.status(200).send({ reactions: reactions });
-    })["catch"](next);
+    var post_id = req.params.post_id;
+    if (!Number.isInteger(parseInt(post_id))) {
+        next({ status: 400, message: "Bad request" });
+    }
+    else {
+        return (0, checkExists_1.checkPostExists)(post_id)
+            .then(function (doesPostExist) {
+            if (!doesPostExist) {
+                return Promise.reject({ status: 404, message: "Post not found" });
+            }
+            return (0, reactions_model_1.selectReactionsByPost)(post_id);
+        })
+            .then(function (reactions) {
+            res.status(200).send({ reactions: reactions });
+        })["catch"](next);
+    }
 };
 exports.getReactionsByPost = getReactionsByPost;
