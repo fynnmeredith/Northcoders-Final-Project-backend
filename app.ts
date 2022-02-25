@@ -8,6 +8,15 @@ app.use(express.json());
 app.use(cors());
 
 app.use((req, res, next) => {
+  if (req.body.start_date) {
+    req.body.start_date = new Date(req.body.start_date);
+  }
+  if (req.body.end_date) {
+    req.body.end_date = new Date(req.body.end_date);
+  }
+  if (req.body.date) {
+    req.body.date = new Date(req.body.date);
+  }
   console.log(req.body);
   next();
 });
