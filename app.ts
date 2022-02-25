@@ -7,6 +7,11 @@ app.use(express.json());
 
 app.use(cors());
 
+app.use((req, res, next) => {
+  console.log(req.body);
+  next();
+});
+
 app.use("/api", apiRouter);
 
 app.all("*", (req, res) => {
