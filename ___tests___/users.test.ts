@@ -162,7 +162,7 @@ describe("/api/users POST USER", () => {
 });
 
 //TBC IF PROFILE IMG URL IS STORED VIA AUTHENTICATION
-describe.only("/api/users patch user profile works", () => {
+describe("/api/users patch user profile works", () => {
   test("patch user profile works, without avatar_url", () => {
     return request(app)
       .patch("/api/users")

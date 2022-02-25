@@ -1,3 +1,4 @@
+import { Console } from "console";
 import {
   selectUsers,
   insertUser,
@@ -60,21 +61,45 @@ export const patchUser = (req, res, next) => {
   } else if (profile === undefined && avatar_url === undefined) {
     next({ status: 400, message: "Bad request" });
   } else {
-    // if (profile === undefined) {
-    //   const profile = selectUser(username).body.user[0].profile;
-    // }
-    // if (avatar_url === undefined) {
-    //   console.log(selectUser(username).body);
-    //   const avatar_url = selectUser(username).body.user[0].avatar_url;
-    // }
-
-    return modifyUser(username, profile, avatar_url)
-      .then((user) => {
-        res.status(200).send({ user });
-      })
-      .catch((err) => {
-        next(err);
-      });
+    if (profile === undefined) {
+      selectUser(username)
+        .then((user) => {
+          const profile = user[0].profile;
+          return profile;
+        })
+        .then((profile) => {
+          return modifyUser(username, profile, avatar_url)
+            .then((user) => {
+              res.status(200).send({ user });
+            })
+            .catch((err) => {
+              next(err);
+            });
+        });
+    } else if (avatar_url === undefined) {
+      selectUser(username)
+        .then((user) => {
+          const avatar_url = user[0].avatar_url;
+          return avatar_url;
+        })
+        .then((avatar_url) => {
+          return modifyUser(username, profile, avatar_url)
+            .then((user) => {
+              res.status(200).send({ user });
+            })
+            .catch((err) => {
+              next(err);
+            });
+        });
+    } else {
+      return modifyUser(username, profile, avatar_url)
+        .then((user) => {
+          res.status(200).send({ user });
+        })
+        .catch((err) => {
+          next(err);
+        });
+    }
   }
 };
 

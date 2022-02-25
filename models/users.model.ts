@@ -1,3 +1,4 @@
+import { Console } from "console";
 import { db } from "../db/connection";
 
 export const selectUsers = (searchTerm) => {
@@ -36,6 +37,7 @@ export const insertUser = (username, profile, avatar_url) => {
 };
 
 export const modifyUser = (username, profile, avatar_url) => {
+  console.log("MODEL CHECKPOINT", username, profile, avatar_url);
   return db
     .query(
       `UPDATE users SET profile = ($2), avatar_url=($3) WHERE  username =($1) RETURNING *;`,
@@ -61,7 +63,6 @@ export const selectUser = (username) => {
       username,
     ])
     .then((res) => {
-      console.log("Model checkpoint", res.rows);
       return res.rows;
     });
 };
