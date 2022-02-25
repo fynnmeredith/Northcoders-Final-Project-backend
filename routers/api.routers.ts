@@ -13,7 +13,7 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/goals", goalsRouter);
 apiRouter.use("/subgoals", subgoalsRouter);
 apiRouter.use("/posts", postsRouter);
-apiRouter.user("/reactions", reactionsRouter);
+apiRouter.use("/reactions", reactionsRouter);
 apiRouter.use("/friendships", friendshipsRouter);
 
 export { apiRouter };

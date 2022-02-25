@@ -121,7 +121,7 @@ const seed = (data) => {
         reaction_id SERIAL PRIMARY KEY,
         post_id INTEGER NOT NULL,
         owner VARCHAR(25) NOT NULL,
-        reaction VARCHAR(15) NOT NULL,
+        reaction VARCHAR(25) NOT NULL,
         FOREIGN KEY (post_id)
         REFERENCES posts(post_id),
         FOREIGN KEY (owner)

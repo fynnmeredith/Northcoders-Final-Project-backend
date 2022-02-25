@@ -1,45 +1,38 @@
 import { db } from "../db/connection";
 
-const insertReaction = (user_1: string, user_2: string) => {
+const insertReaction = (post_id: number, owner: string, reaction: string) => {
   return db
     .query(
-      `INSERT INTO friendships
-    (user_1, user_2)
+      `INSERT INTO reactions
+    (post_id, owner, reaction)
     VALUES
-    ($1, $2)
+    ($1, $2, $3)
     RETURNING *;`,
-      [user_1, user_2]
+      [post_id, owner, reaction]
     )
     .then((res) => {
       return res.rows[0];
     });
 };
 
-const deleteReactionFrom = (friendship_id: number) => {
+const deleteReactionFrom = (reaction_id: number) => {
   return db.query(
-    `DELETE FROM friendships
-        WHERE friendship_id = $1;`,
-    [friendship_id]
+    `DELETE FROM reactions
+        WHERE reaction_id = $1;`,
+    [reaction_id]
   );
 };
 
-const selectReactionsByPost = (username: string) => {
-  const user1FriendshipPromise = db.query(
-    `SELECT * FROM friendships 
-        WHERE user_1 = $1`,
-    [username]
-  );
-  const user2FriendshipPromise = db.query(
-    `SELECT * FROM friendships 
-        WHERE user_2 = $1`,
-    [username]
-  );
-  return Promise.all([user1FriendshipPromise, user2FriendshipPromise]).then(
-    ([user1Res, user2Res]) => {
-      const res = [...user1Res.rows, ...user2Res.rows];
-      return res;
-    }
-  );
+const selectReactionsByPost = (post_id: number) => {
+  return db
+    .query(
+      `SELECT * FROM reactions 
+        WHERE post_id = $1`,
+      [post_id]
+    )
+    .then((res) => {
+      return res.rows;
+    });
 };
 
 export { insertReaction, deleteReactionFrom, selectReactionsByPost };
