@@ -1,6 +1,6 @@
 const formatUsers = (users) => {
   return users.map((user) => {
-    return [user.username, user.profile];
+    return [user.username, user.profile, user.avatar_url];
   });
 };
 

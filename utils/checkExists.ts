@@ -36,6 +36,18 @@ const checkSubgoalExists = (subgoal_id: number) => {
     });
 };
 
+const checkCommentExists = (comment_id) => {
+  return db
+    .query(
+      `SELECT * FROM comments
+  WHERE comment_id = $1;`,
+      [comment_id]
+    )
+    .then((res) => {
+      return res.rows.length === 1;
+    });
+};
+
 const checkFriendshipExists = (friendship_id: number) => {
   return db
     .query(
@@ -109,6 +121,7 @@ export {
   checkGoalExists,
   checkUserExists,
   checkSubgoalExists,
+  checkCommentExists,
   checkFriendshipExists,
   checkReactionExists,
   checkIfUsersAreFriends,
