@@ -1,7 +1,6 @@
 "use strict";
 //jeff,susan,mary,stuart,mahood,martina,dmitri,betty
 exports.__esModule = true;
-exports.commentData = void 0;
 var commentData = [
     {
         post_id: 1,

@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-exports.friendshipData = exports.reactionData = exports.commentData = exports.postData = exports.subgoalData = exports.goalData = exports.userData = void 0;
 var users_1 = require("./users");
 exports.userData = users_1.userData;
 var goals_1 = require("./goals");

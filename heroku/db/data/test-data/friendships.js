@@ -8,7 +8,6 @@
 // dmitri: stuart,betty,mahmood
 // betty: jeff,dimitri
 exports.__esModule = true;
-exports.friendshipData = void 0;
 var friendshipData = [
     {
         user_1: "jeff",

@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-exports.userData = void 0;
 var userData = [
     {
         username: "jeff",

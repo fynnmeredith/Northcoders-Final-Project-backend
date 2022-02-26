@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-exports.postData = void 0;
 //jeff,susan,mary,stuart,mahood,martina,dmitri,betty
 var postData = [
     {

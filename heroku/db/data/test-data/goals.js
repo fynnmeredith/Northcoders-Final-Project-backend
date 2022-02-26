@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-exports.goalData = void 0;
 var goalData = [
     {
         objective: "Run 120km",

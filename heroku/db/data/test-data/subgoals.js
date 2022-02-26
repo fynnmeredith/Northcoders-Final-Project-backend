@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-exports.subgoalData = void 0;
 var subgoalData = [
     {
         goal_id: 1,
@@ -50,7 +49,7 @@ var subgoalData = [
         goal_id: 1,
         objective: "Run 30km",
         start_date: new Date(2022, 1, 28),
-        end_date: new Date(2022, 2, 4),
+        end_date: new Date(2022, 2, 6),
         type: "progress",
         status: "active",
         owner: "jeff",

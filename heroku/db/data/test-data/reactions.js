@@ -1,7 +1,6 @@
 "use strict";
 //jeff,susan,mary,stuart,mahood,martina,dmitri,betty
 exports.__esModule = true;
-exports.reactionData = void 0;
 var reactionData = [
     {
         post_id: 1,
