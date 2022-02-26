@@ -14,13 +14,17 @@ import {
 import { requestKeyCheck } from "../utils/misc";
 
 export const postPost = (req, res, next) => {
-  const { associated_data_type, associated_id, owner, datetime, message } =
-    req.body;
-  console.log(req.body);
+  const {
+    associated_data_type,
+    associated_id,
+    owner,
+    datetime,
+    message,
+    progress_point,
+  } = req.body;
 
   return checkUserExists(owner)
     .then((res) => {
-      console.log("YOOOO", res);
       if (res === false) {
         throw {
           status: 400,
@@ -75,7 +79,8 @@ export const postPost = (req, res, next) => {
         associated_id,
         owner,
         datetime,
-        message
+        message,
+        progress_point
       );
     })
     .then((post) => {

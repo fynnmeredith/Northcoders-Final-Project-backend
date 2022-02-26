@@ -13,6 +13,7 @@ const postData = [
     owner: "jeff",
     datetime: new Date(2022, 1, 10, 7, 32, 18),
     message: "Baby I was born to run!",
+    progress_point: 2,
   },
   {
     associated_data_type: "subgoal",
@@ -27,6 +28,7 @@ const postData = [
     owner: "mary",
     datetime: new Date(2022, 0, 28, 12, 32, 18),
     message: "Morocco here I come!",
+    progress_point: 0,
   },
   {
     associated_data_type: "goal",

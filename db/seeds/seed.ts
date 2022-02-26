@@ -98,6 +98,7 @@ const seed = (data) => {
         owner VARCHAR(25) NOT NULL,
         datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         message VARCHAR(2000),
+        progress_point INTEGER,
         FOREIGN KEY (owner)
         REFERENCES users(username)
       );`);

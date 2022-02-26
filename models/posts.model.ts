@@ -5,12 +5,20 @@ export const insertPost = (
   associated_id,
   owner,
   datetime,
-  message
+  message,
+  progress_point
 ) => {
   return db
     .query(
-      `INSERT INTO posts (associated_data_type,associated_id,owner,datetime,message) VALUES ($1,$2,$3,$4,$5) RETURNING *;`,
-      [associated_data_type, associated_id, owner, datetime, message]
+      `INSERT INTO posts (associated_data_type,associated_id,owner,datetime,message, progress_point) VALUES ($1,$2,$3,$4,$5, $6) RETURNING *;`,
+      [
+        associated_data_type,
+        associated_id,
+        owner,
+        datetime,
+        message,
+        progress_point,
+      ]
     )
     .then((res) => {
       console.log(res.rows);
