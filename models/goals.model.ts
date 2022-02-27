@@ -93,7 +93,10 @@ const updateGoalProgress = (
   oldProgress: ProgressPoint[],
   targetValue: number
 ) => {
-  const latestValue = oldProgress[oldProgress.length - 1][1];
+  let latestValue = 0;
+  if (oldProgress.length > 0) {
+    latestValue = oldProgress[oldProgress.length - 1][1];
+  }
   const newValue = latestValue + value;
   const newProgress = oldProgress.map((progressPoint) => {
     return [...progressPoint];
