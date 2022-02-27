@@ -6,6 +6,7 @@ const postData = [
     owner: "jeff",
     datetime: new Date(2022, 1, 19, 16, 0, 31),
     message: "Keep on running!",
+    progress_point: 4,
   },
   {
     associated_data_type: "subgoal",
@@ -39,6 +40,13 @@ const postData = [
     And for this gift I feel blessed
     Our little group has always been
     And always will until the end`,
+  },
+  {
+    associated_data_type: "goal",
+    associated_id: 5,
+    owner: "stuart",
+    datetime: new Date(2022, 1, 27, 19, 45, 21),
+    message: "Look out Michael Phelps!",
   },
 ];
 

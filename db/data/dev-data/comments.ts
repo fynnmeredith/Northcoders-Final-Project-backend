@@ -20,7 +20,19 @@ const commentData = [
     datetime: new Date(2022, 1, 15, 8, 36, 28),
   },
   {
+    post_id: 5,
+    message: "Takes me to Nirvana",
+    owner: "mahmood",
+    datetime: new Date(2022, 1, 18, 6, 2, 1),
+  },
+  {
     post_id: 3,
+    message: "Great work!",
+    owner: "dmitri",
+    datetime: new Date(2022, 1, 28, 14, 20, 44),
+  },
+  {
+    post_id: 6,
     message: "Great work!",
     owner: "dmitri",
     datetime: new Date(2022, 1, 28, 14, 20, 44),

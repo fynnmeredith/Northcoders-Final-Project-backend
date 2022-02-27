@@ -53,8 +53,9 @@ const goalData = [
     start_date: new Date(2022, 0, 1),
     end_date: new Date(2022, 5, 30),
     type: "boolean",
-    status: "active",
+    status: "completed",
     owner: "stuart",
+    finish_date: new Date(2022, 1, 10),
   },
   {
     objective: "Complete triathlon",
