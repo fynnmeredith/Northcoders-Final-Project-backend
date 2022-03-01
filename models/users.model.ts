@@ -59,9 +59,7 @@ export const modifyUser = (username, profile, avatar_url) => {
 
 export const selectUser = (username) => {
   return db
-    .query(`SELECT username, profile FROM users WHERE username=($1)`, [
-      username,
-    ])
+    .query(`SELECT * FROM users WHERE username=($1)`, [username])
     .then((res) => {
       return res.rows;
     });

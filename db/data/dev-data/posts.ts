@@ -48,6 +48,13 @@ const postData = [
     datetime: new Date(2022, 1, 27, 19, 45, 21),
     message: "Look out Michael Phelps!",
   },
+  {
+    associated_data_type: "subgoal",
+    associated_id: 32,
+    owner: "jeff",
+    datetime: new Date(2022, 0, 21, 3, 16, 32),
+    message: "I am the Tony Hawk of coding",
+  },
 ];
 
 export { postData };
