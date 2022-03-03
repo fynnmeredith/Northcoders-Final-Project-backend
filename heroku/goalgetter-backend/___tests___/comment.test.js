@@ -44,7 +44,6 @@ describe("/api/comments gets all comments for a post", function () {
             .get("/api/posts/1/comments")
             .expect(200)
             .then(function (res) {
-            console.log(res.body);
             expect(res.body.comments).toBeInstanceOf(Array);
             res.body.comments.forEach(function (comment) {
                 expect(comment).toMatchObject({
@@ -62,7 +61,6 @@ describe("/api/comments gets all comments for a post", function () {
             .get("/api/posts/900/comments")
             .expect(400)
             .then(function (res) {
-            console.log(res);
             expect(res.body.message).toBe("Bad request");
         });
     });
@@ -95,7 +93,6 @@ describe("/api/comments Post new comment", function () {
         })
             .expect(400)
             .then(function (res) {
-            console.log(res);
             expect(res.body.message).toBe("Bad request");
         });
     });
@@ -118,7 +115,6 @@ describe("/api/comments deletes a comment", function () {
         return supertest_1["default"](app_1.app)["delete"]("/api/comments/1")
             .expect(200)
             .then(function (res) {
-            console.log(res.body);
             expect(res.body.comment[0]).toBeInstanceOf(Object);
             expect(res.body.comment[0]).toMatchObject({
                 comment_id: expect.any(Number),

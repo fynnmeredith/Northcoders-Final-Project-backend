@@ -51,7 +51,6 @@ describe("/api/users GET all users", function () {
             .get("/api/users?search=je")
             .expect(200)
             .then(function (res) {
-            console.log(res.body.users);
             expect(res.body.users).toBeInstanceOf(Array);
             expect(res.body.users).toHaveLength(1);
             expect(res.body.users[0]).toMatchObject({
