@@ -144,7 +144,6 @@ describe("Get social media post by user, sort by date-time", () => {
       .get("/api/posts/jeff")
       .expect(200)
       .then((res) => {
-        console.log(res.body.posts);
         expect(res.body.posts).toBeInstanceOf(Array);
         res.body.posts.forEach((post) => {
           expect(post).toBeInstanceOf(Object);

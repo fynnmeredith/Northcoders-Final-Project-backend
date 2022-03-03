@@ -15,7 +15,6 @@ export const insertComment = (post_id, message, owner, datetime) => {
       [post_id, message, owner, datetime]
     )
     .then((res) => {
-      console.log(res.rows);
       return res.rows;
     });
 };
@@ -26,7 +25,6 @@ export const deleteCommentFromPost = (comment_id) => {
       comment_id,
     ])
     .then((res) => {
-      console.log(res.rows);
       return res.rows;
     });
 };
