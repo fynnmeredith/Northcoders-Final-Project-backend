@@ -191,6 +191,15 @@ const goalData = [
     status: "active",
     owner: "jeff",
   },
+  {
+    objective: "Play six rounds of golf in three days",
+    description: "Getting into the swing of things",
+    start_date: new Date(2022, 2, 2),
+    end_date: new Date(2022, 2, 4),
+    type: "boolean",
+    status: "active",
+    owner: "jeff",
+  },
 ];
 
 export { goalData };

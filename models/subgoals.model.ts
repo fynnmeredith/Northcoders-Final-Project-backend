@@ -16,7 +16,7 @@ const insertSubgoal = (
   let progress;
   if (target_value) {
     type = "progress";
-    progress = JSON.stringify([[]]);
+    progress = JSON.stringify([]);
   }
   const query = `INSERT INTO subgoals
         (goal_id, objective, start_date, end_date, type, status, owner, target_value, unit, progress)
