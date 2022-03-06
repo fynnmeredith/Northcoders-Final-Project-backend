@@ -17,7 +17,6 @@ app.use((req, res, next) => {
   if (req.body.date) {
     req.body.date = new Date(req.body.date);
   }
-  console.log(req.body);
   next();
 });
 

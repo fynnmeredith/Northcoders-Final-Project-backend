@@ -65,7 +65,6 @@ describe("/api/users GET all users", function () {
             .get("/api/users?search=t")
             .expect(200)
             .then(function (res) {
-            console.log(res.body.users);
             expect(res.body.users).toBeInstanceOf(Array);
             expect(res.body.users).toHaveLength(4);
             res.body.users.forEach(function (user) {
@@ -129,7 +128,6 @@ describe("/api/users POST USER", function () {
             .send({ username: "jeff", profile: "fail test" })
             .expect(406)
             .then(function (res) {
-            console.log(res);
             expect(res.body.message).toBe("Username already taken");
         });
     });
