@@ -6,6 +6,10 @@ An online hosted version of this repository can be found at:
 
 https://goalgetter-backend.herokuapp.com/
 
+The repository for the front-end of the project can be found at:
+
+https://github.com/Neb233/goal_getter_front_end
+
 ## About
 
 In this project we have created a API for goal-focused social platform. This includes the ability to post to, patch, get from, and delete from, SQL databases for users, goals, subgoals, posts, comments, reactions and friendships. 
