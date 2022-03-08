@@ -2,9 +2,7 @@ import express from "express";
 
 import {
   postGoal,
-  deleteGoal,
   getGoalByGoalId,
-  patchGoalDetails,
   patchGoalProgress,
   patchGoalStatus,
 } from "../controllers/goals.controller";
@@ -18,9 +16,7 @@ const goalsRouter = express.Router();
 
 goalsRouter.post("/", postGoal);
 
-goalsRouter.route("/:goal_id").delete(deleteGoal).get(getGoalByGoalId);
-
-goalsRouter.patch("/:goal_id/details", patchGoalDetails);
+goalsRouter.route("/:goal_id").get(getGoalByGoalId);
 
 goalsRouter.patch("/:goal_id/status", patchGoalStatus);
 

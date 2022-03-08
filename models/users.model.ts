@@ -1,4 +1,3 @@
-import { Console } from "console";
 import { db } from "../db/connection";
 
 export const selectUsers = (searchTerm) => {
@@ -18,7 +17,6 @@ export const selectUsers = (searchTerm) => {
         return res.rows;
       })
       .catch((err) => {
-        console.log(err);
         return err;
       });
   }
@@ -31,13 +29,11 @@ export const insertUser = (username, profile, avatar_url) => {
       [username, profile, avatar_url]
     )
     .then((res) => {
-      // console.log(res.rows);
       return res.rows;
     });
 };
 
 export const modifyUser = (username, profile, avatar_url) => {
-  console.log("MODEL CHECKPOINT", username, profile, avatar_url);
   return db
     .query(
       `UPDATE users SET profile = ($2), avatar_url=($3) WHERE  username =($1) RETURNING *;`,
@@ -47,15 +43,6 @@ export const modifyUser = (username, profile, avatar_url) => {
       return res.rows;
     });
 };
-
-//TBC
-// export const deleteUserModel = (username) => {
-//   return db
-//     .query(`DELETE FROM users WHERE username=($1) RETURNING *;`, [username])
-//     .then((res) => {
-//       return res.rows;
-//     });
-// };
 
 export const selectUser = (username) => {
   return db

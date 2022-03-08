@@ -1,9 +1,6 @@
-import e from "cors";
 import {
   insertGoal,
-  deleteGoalFrom,
   selectGoalByGoalId,
-  updateGoalDetails,
   updateGoalStatus,
   updateGoalProgress,
   selectGoalsByUser,
@@ -51,26 +48,6 @@ const postGoal = (req, res, next) => {
       })
       .then((goal: Goal) => {
         res.status(200).send({ goal });
-      })
-      .catch(next);
-  }
-};
-
-const deleteGoal = (req, res, next) => {
-  const { goal_id } = req.params;
-
-  if (!Number.isInteger(parseInt(goal_id))) {
-    next({ status: 400, message: "Bad request" });
-  } else {
-    return checkGoalExists(goal_id)
-      .then((doesGoalExist: Boolean) => {
-        if (!doesGoalExist) {
-          return Promise.reject({ status: 404, message: "Goal not found" });
-        }
-        return deleteGoalFrom(goal_id);
-      })
-      .then(() => {
-        res.status(204).send();
       })
       .catch(next);
   }
@@ -228,9 +205,7 @@ const getGoalsByUser = (req, res, next) => {
 
 export {
   postGoal,
-  deleteGoal,
   getGoalByGoalId,
-  patchGoalDetails,
   patchGoalStatus,
   patchGoalProgress,
   getGoalsByUser,

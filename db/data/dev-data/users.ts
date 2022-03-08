@@ -46,6 +46,34 @@ const userData = [
     profile: "Life is for living",
     avatar_url: "https://upload.wikimedia.org/wikipedia/en/2/2d/Lakitu.png",
   },
+  {
+    username: "andrew",
+    profile: "A man on a mission",
+    avatar_url:
+      "https://www.nicepng.com/png/full/6-65144_luigi-new-super-mario-bros-2-and-super.png",
+  },
+  {
+    username: "ben",
+    profile: "I live for the goals",
+    avatar_url:
+      "https://www.gamesatlas.com/images/jch-optimize/ng/images_articles_mario---peach-the-mushroom-princess.webp",
+  },
+  {
+    username: "joe",
+    profile: "Ambition is my middle name",
+    avatar_url: "https://www.seekpng.com/ima/u2t4r5r5y3u2t4q8/",
+  },
+  {
+    username: "michael",
+    profile: "Goals for breakfast, lunch and dinner",
+    avatar_url:
+      "https://64.media.tumblr.com/4c491a7e7c5fae1b9f76a1ba397eeb5b/tumblr_po31hwOp5h1x908lio1_1280.jpg",
+  },
+  {
+    username: "fynn",
+    profile: "The real goalgetter",
+    avatar_url: "https://mario.wiki.gallery/images/3/3e/MPSS_Mario.png",
+  },
 ];
 
 export { userData };

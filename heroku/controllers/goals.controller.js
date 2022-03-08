@@ -31,25 +31,6 @@ var postGoal = function (req, res, next) {
     }
 };
 exports.postGoal = postGoal;
-var deleteGoal = function (req, res, next) {
-    var goal_id = req.params.goal_id;
-    if (!Number.isInteger(parseInt(goal_id))) {
-        next({ status: 400, message: "Bad request" });
-    }
-    else {
-        return checkExists_1.checkGoalExists(goal_id)
-            .then(function (doesGoalExist) {
-            if (!doesGoalExist) {
-                return Promise.reject({ status: 404, message: "Goal not found" });
-            }
-            return goals_model_1.deleteGoalFrom(goal_id);
-        })
-            .then(function () {
-            res.status(204).send();
-        })["catch"](next);
-    }
-};
-exports.deleteGoal = deleteGoal;
 var getGoalByGoalId = function (req, res, next) {
     var goal_id = req.params.goal_id;
     if (!Number.isInteger(parseInt(goal_id))) {
@@ -64,7 +45,6 @@ var getGoalByGoalId = function (req, res, next) {
 };
 exports.getGoalByGoalId = getGoalByGoalId;
 var patchGoalDetails = function (req, res, next) { };
-exports.patchGoalDetails = patchGoalDetails;
 var patchGoalStatus = function (req, res, next) {
     var goal_id = req.params.goal_id;
     var _a = req.body, status = _a.status, date = _a.date;

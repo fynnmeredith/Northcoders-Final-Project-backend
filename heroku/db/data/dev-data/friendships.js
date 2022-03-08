@@ -49,5 +49,45 @@ var friendshipData = [
         user_1: "mahmood",
         user_2: "dmitri"
     },
+    {
+        user_1: "fynn",
+        user_2: "andrew"
+    },
+    {
+        user_1: "fynn",
+        user_2: "ben"
+    },
+    {
+        user_1: "fynn",
+        user_2: "joe"
+    },
+    {
+        user_1: "fynn",
+        user_2: "michael"
+    },
+    {
+        user_1: "andrew",
+        user_2: "ben"
+    },
+    {
+        user_1: "andrew",
+        user_2: "joe"
+    },
+    {
+        user_1: "andrew",
+        user_2: "michael"
+    },
+    {
+        user_1: "ben",
+        user_2: "joe"
+    },
+    {
+        user_1: "ben",
+        user_2: "michael"
+    },
+    {
+        user_1: "joe",
+        user_2: "michael"
+    },
 ];
 exports.friendshipData = friendshipData;

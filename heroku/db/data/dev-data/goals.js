@@ -55,8 +55,9 @@ var goalData = [
         start_date: new Date(2022, 0, 1),
         end_date: new Date(2022, 5, 30),
         type: "boolean",
-        status: "active",
-        owner: "stuart"
+        status: "completed",
+        owner: "stuart",
+        finish_date: new Date(2022, 1, 10)
     },
     {
         objective: "Complete triathlon",
@@ -121,6 +122,85 @@ var goalData = [
         type: "boolean",
         status: "active",
         owner: "dmitri"
+    },
+    {
+        objective: 'Learn to play "Pennyroyal Tea" on guitar',
+        description: "Trying to start a Nirvana cover band",
+        start_date: new Date(2022, 0, 1),
+        end_date: new Date(2022, 0, 28),
+        type: "boolean",
+        status: "completed",
+        owner: "dmitri",
+        finish_date: new Date(2022, 0, 21)
+    },
+    {
+        objective: "Finish cool coding project",
+        description: "Wanna be a coding boss",
+        start_date: new Date(2022, 1, 28),
+        end_date: new Date(2022, 1, 28),
+        type: "boolean",
+        status: "active",
+        owner: "jeff"
+    },
+    {
+        objective: "Finish awesome coding project",
+        description: "Wanna be a coding king",
+        start_date: new Date(2022, 2, 1),
+        end_date: new Date(2022, 2, 1),
+        type: "boolean",
+        status: "active",
+        owner: "jeff"
+    },
+    {
+        objective: "Write 1000 lines of code",
+        description: "Wanna be a coding don",
+        start_date: new Date(2022, 1, 28),
+        end_date: new Date(2022, 1, 28),
+        type: "progress",
+        status: "active",
+        owner: "jeff",
+        target_value: 1000,
+        unit: "lines",
+        progress: []
+    },
+    {
+        objective: "Write 2000 lines of code",
+        description: "Wanna be a coding master",
+        start_date: new Date(2022, 2, 1),
+        end_date: new Date(2022, 2, 1),
+        type: "progress",
+        status: "active",
+        owner: "jeff",
+        target_value: 2000,
+        unit: "lines",
+        progress: []
+    },
+    {
+        objective: "Finish mindbending coding project",
+        description: "Wanna be a coding doyen",
+        start_date: new Date(2022, 2, 1),
+        end_date: new Date(2022, 2, 1),
+        type: "boolean",
+        status: "active",
+        owner: "jeff"
+    },
+    {
+        objective: "Finish radical coding project",
+        description: "Wanna be a coding legend",
+        start_date: new Date(2022, 2, 1),
+        end_date: new Date(2022, 2, 1),
+        type: "boolean",
+        status: "active",
+        owner: "jeff"
+    },
+    {
+        objective: "Play six rounds of golf in three days",
+        description: "Getting into the swing of things",
+        start_date: new Date(2022, 2, 2),
+        end_date: new Date(2022, 2, 4),
+        type: "boolean",
+        status: "active",
+        owner: "jeff"
     },
 ];
 exports.goalData = goalData;

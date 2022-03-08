@@ -15,7 +15,7 @@ var insertSubgoal = function (goal_id, objective, start_date, end_date, owner, t
     var progress;
     if (target_value) {
         type = "progress";
-        progress = JSON.stringify([[]]);
+        progress = JSON.stringify([]);
     }
     var query = "INSERT INTO subgoals\n        (goal_id, objective, start_date, end_date, type, status, owner, target_value, unit, progress)\n        VALUES\n        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)\n        RETURNING *;\n      ";
     var values = [
@@ -35,10 +35,6 @@ var insertSubgoal = function (goal_id, objective, start_date, end_date, owner, t
     });
 };
 exports.insertSubgoal = insertSubgoal;
-var deleteSubgoalFrom = function (subgoal_id) {
-    return connection_1.db.query("DELETE FROM subgoals\n      WHERE subgoal_id = $1;", [subgoal_id]);
-};
-exports.deleteSubgoalFrom = deleteSubgoalFrom;
 var selectSubgoalBySubgoalId = function (subgoal_id) {
     return connection_1.db
         .query("SELECT * FROM subgoals\n        WHERE subgoal_id = $1;", [subgoal_id])
@@ -50,8 +46,6 @@ var selectSubgoalBySubgoalId = function (subgoal_id) {
     });
 };
 exports.selectSubgoalBySubgoalId = selectSubgoalBySubgoalId;
-var updateSubgoalDetails = function () { };
-exports.updateSubgoalDetails = updateSubgoalDetails;
 var updateSubgoalStatus = function (subgoal_id, status, finish_date) {
     return connection_1.db
         .query("UPDATE subgoals\n  SET status = $1,\n  finish_date = $2\n  WHERE subgoal_id = $3\n  RETURNING *;", [status, finish_date, subgoal_id])
@@ -61,7 +55,10 @@ var updateSubgoalStatus = function (subgoal_id, status, finish_date) {
 };
 exports.updateSubgoalStatus = updateSubgoalStatus;
 var updateSubgoalProgress = function (subgoal_id, date, value, oldProgress, targetValue) {
-    var latestValue = oldProgress[oldProgress.length - 1][1];
+    var latestValue = 0;
+    if (oldProgress.length > 0) {
+        latestValue = oldProgress[oldProgress.length - 1][1];
+    }
     var newValue = latestValue + value;
     var newProgress = oldProgress.map(function (progressPoint) {
         return __spreadArrays(progressPoint);

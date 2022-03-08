@@ -12,7 +12,6 @@ var usersRouter = express_1["default"].Router();
 exports.usersRouter = usersRouter;
 usersRouter.route("/").get(users_controller_1.getUsers).post(users_controller_1.postUser).patch(users_controller_1.patchUser);
 usersRouter.get("/:username", users_controller_1.getUser);
-// .delete(deleteUser)
 usersRouter.get("/:username/goals", goals_controller_1.getGoalsByUser);
 usersRouter.get("/:username/subgoals", subgoals_controller_1.getSubgoalsByUser);
 usersRouter.get("/:username/friendships", friendships_controller_1.getFriendshipsbyUser);

@@ -11,8 +11,6 @@ var postsRouter = express_1["default"].Router();
 exports.postsRouter = postsRouter;
 postsRouter.route("/").post(posts_controller_1.postPost);
 postsRouter.get("/:username", posts_controller_1.getPostsByUser);
-//TBC
-// usersRouter.route("/friendsPosts/:user").get(getPostByUserFriends);
 postsRouter.route("/:post_id/comments/").get(comments_controllers_1.getComments).post(comments_controllers_1.postComment);
 postsRouter
     .route("/:post_id/reactions")

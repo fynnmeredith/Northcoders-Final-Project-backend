@@ -51,7 +51,6 @@ describe("/api/users GET all users", function () {
             .get("/api/users?search=je")
             .expect(200)
             .then(function (res) {
-            console.log(res.body.users);
             expect(res.body.users).toBeInstanceOf(Array);
             expect(res.body.users).toHaveLength(1);
             expect(res.body.users[0]).toMatchObject({
@@ -65,7 +64,6 @@ describe("/api/users GET all users", function () {
             .get("/api/users?search=t")
             .expect(200)
             .then(function (res) {
-            console.log(res.body.users);
             expect(res.body.users).toBeInstanceOf(Array);
             expect(res.body.users).toHaveLength(4);
             res.body.users.forEach(function (user) {
@@ -76,7 +74,7 @@ describe("/api/users GET all users", function () {
             });
         });
     });
-    test("Search query with je", function () {
+    test("Search query with empty string", function () {
         return supertest_1["default"](app_1.app)
             .get("/api/users?search=")
             .expect(200)
@@ -129,7 +127,6 @@ describe("/api/users POST USER", function () {
             .send({ username: "jeff", profile: "fail test" })
             .expect(406)
             .then(function (res) {
-            console.log(res);
             expect(res.body.message).toBe("Username already taken");
         });
     });
@@ -142,32 +139,7 @@ describe("/api/users POST USER", function () {
             expect(res.body.message).toBe("Bad request, please submit a username");
         });
     });
-    //Removed frome scope
-    test.skip("Post new user, thrown error if username is too long", function () {
-        //   return request(app)
-        //     .post("/api/users")
-        //     .send({ username: "abcdefghijklmnopqrstuvw", profile: "failedtest" })
-        //     .expect(406)
-        //     .then((res) => {
-        //       expect(res.body.message).toBe(
-        //         "Bad request, please submit a shorter username"
-        //       );
-        //     });
-    });
-    //Removed frome scope
-    test.skip("Post new user, throw error if profile url is invalid", function () {
-        //   return request(app)
-        //     .post("/api/users")
-        //     .send({ username: "testusername", profile: "bademail" })
-        //     .expect(406)
-        //     .then((res) => {
-        //       expect(res.body.message).toBe(
-        //         "Bad request, please submit a shorter profile url"
-        //       );
-        //     });
-    });
 });
-//TBC IF PROFILE IMG URL IS STORED VIA AUTHENTICATION
 describe("/api/users patch user profile works", function () {
     test("patch user profile works, without avatar_url", function () {
         return supertest_1["default"](app_1.app)
@@ -234,39 +206,6 @@ describe("/api/users patch user profile works", function () {
             .expect(400)
             .then(function (res) {
             expect(res.body.message).toBe("Bad request");
-        });
-    });
-});
-//out of scope for now
-describe.skip("/api/users Delete User", function () {
-    test("Delete user profile works", function () {
-        return supertest_1["default"](app_1.app)["delete"]("/api/users")
-            .send({ username: "jeff" })
-            .expect(200)
-            .then(function (res) {
-            expect(res.body.user[0]).toBeInstanceOf(Object);
-            expect(res.body.user[0]).toMatchObject({
-                username: expect.any(String),
-                profile: expect.any(String)
-            });
-        });
-    });
-    test("Delete user profile request with non-existent user throws error", function () { });
-    test("Delete user profile request with missing keys throws error", function () { });
-});
-describe("/api/user/:username", function () {
-    describe("GET user by username", function () {
-        test("Get user by username works", function () {
-            return supertest_1["default"](app_1.app)
-                .get("/api/users/jeff")
-                .expect(200)
-                .then(function (res) {
-                expect(res.body.user[0]).toBeInstanceOf(Object);
-                expect(res.body.user[0]).toMatchObject({
-                    username: "jeff",
-                    profile: "Constant striver"
-                });
-            });
         });
     });
 });

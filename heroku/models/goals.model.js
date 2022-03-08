@@ -15,7 +15,7 @@ var insertGoal = function (objective, description, start_date, end_date, owner, 
     var progress;
     if (target_value) {
         type = "progress";
-        progress = JSON.stringify([[]]);
+        progress = JSON.stringify([]);
     }
     var query = "INSERT INTO goals\n      (objective, description, start_date, end_date, type, status, owner, target_value, unit, progress)\n      VALUES\n      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)\n      RETURNING *;\n    ";
     var values = [
@@ -35,10 +35,6 @@ var insertGoal = function (objective, description, start_date, end_date, owner, 
     });
 };
 exports.insertGoal = insertGoal;
-var deleteGoalFrom = function (goal_id) {
-    return connection_1.db.query("DELETE FROM goals\n      WHERE goal_id = $1;", [goal_id]);
-};
-exports.deleteGoalFrom = deleteGoalFrom;
 var selectGoalByGoalId = function (goal_id) {
     return connection_1.db
         .query("SELECT * FROM goals\n        WHERE goal_id = $1;", [goal_id])
@@ -50,8 +46,6 @@ var selectGoalByGoalId = function (goal_id) {
     });
 };
 exports.selectGoalByGoalId = selectGoalByGoalId;
-var updateGoalDetails = function () { };
-exports.updateGoalDetails = updateGoalDetails;
 var updateGoalStatus = function (goal_id, status, finish_date) {
     return connection_1.db
         .query("UPDATE goals\n  SET status = $1,\n  finish_date = $2\n  WHERE goal_id = $3\n  RETURNING *;", [status, finish_date, goal_id])
@@ -61,7 +55,10 @@ var updateGoalStatus = function (goal_id, status, finish_date) {
 };
 exports.updateGoalStatus = updateGoalStatus;
 var updateGoalProgress = function (goal_id, date, value, oldProgress, targetValue) {
-    var latestValue = oldProgress[oldProgress.length - 1][1];
+    var latestValue = 0;
+    if (oldProgress.length > 0) {
+        latestValue = oldProgress[oldProgress.length - 1][1];
+    }
     var newValue = latestValue + value;
     var newProgress = oldProgress.map(function (progressPoint) {
         return __spreadArrays(progressPoint);

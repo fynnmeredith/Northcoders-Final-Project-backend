@@ -28,7 +28,6 @@ exports.postUser = function (req, res, next) {
         .then(function (user) {
         res.status(200).send({ user: user });
     })["catch"](function (err) {
-        console.log(err);
         if (err.code === "23505") {
             next({ status: 406, message: "Username already taken" });
         }
@@ -89,18 +88,6 @@ exports.patchUser = function (req, res, next) {
         }
     }
 };
-// DELETE USER TBC
-// export const deleteUser = (req, res, next) => {
-//   const { username } = req.body;
-//   return deleteUserModel(username)
-//     .then((user) => {
-//       res.status(200).send({ user });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       next(err);
-//     });
-// };
 exports.getUser = function (req, res, next) {
     var username = req.params.username;
     return users_model_1.selectUser(username).then(function (user) {

@@ -17,7 +17,6 @@ app.use((req, res, next) => {
   if (req.body.date) {
     req.body.date = new Date(req.body.date);
   }
-  console.log(req.body);
   next();
 });
 
@@ -36,8 +35,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
-
   res.status(500).send({ message: "Something went wrong" });
 });
 

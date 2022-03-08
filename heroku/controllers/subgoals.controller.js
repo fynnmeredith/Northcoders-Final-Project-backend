@@ -47,25 +47,6 @@ var postSubgoal = function (req, res, next) {
     }
 };
 exports.postSubgoal = postSubgoal;
-var deleteSubgoal = function (req, res, next) {
-    var subgoal_id = req.params.subgoal_id;
-    if (!Number.isInteger(parseInt(subgoal_id))) {
-        next({ status: 400, message: "Bad request" });
-    }
-    else {
-        return checkExists_1.checkSubgoalExists(subgoal_id)
-            .then(function (doesSubgoalExist) {
-            if (!doesSubgoalExist) {
-                return Promise.reject({ status: 404, message: "Subgoal not found" });
-            }
-            return subgoals_model_1.deleteSubgoalFrom(subgoal_id);
-        })
-            .then(function () {
-            res.status(204).send();
-        })["catch"](next);
-    }
-};
-exports.deleteSubgoal = deleteSubgoal;
 var getSubgoalBySubgoalId = function (req, res, next) {
     var subgoal_id = req.params.subgoal_id;
     if (!Number.isInteger(parseInt(subgoal_id))) {
@@ -79,8 +60,6 @@ var getSubgoalBySubgoalId = function (req, res, next) {
     }
 };
 exports.getSubgoalBySubgoalId = getSubgoalBySubgoalId;
-var patchSubgoalDetails = function (req, res, next) { };
-exports.patchSubgoalDetails = patchSubgoalDetails;
 var patchSubgoalStatus = function (req, res, next) {
     var subgoal_id = req.params.subgoal_id;
     var _a = req.body, status = _a.status, date = _a.date;
