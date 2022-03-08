@@ -18,7 +18,6 @@ const usersRouter = express.Router();
 usersRouter.route("/").get(getUsers).post(postUser).patch(patchUser);
 
 usersRouter.get("/:username", getUser);
-// .delete(deleteUser)
 
 usersRouter.get("/:username/goals", getGoalsByUser);
 

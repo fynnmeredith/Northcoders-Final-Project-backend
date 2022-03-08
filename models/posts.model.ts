@@ -21,18 +21,7 @@ export const insertPost = (
       ]
     )
     .then((res) => {
-      console.log(res.rows);
       return res.rows;
-    });
-};
-
-// TBC
-export const removePost = (post_id) => {
-  return db
-    .query(`DELETE FROM posts WHERE post_id=($1) RETURNING *;`, [post_id])
-    .then((res) => {
-      console.log(res);
-      return res;
     });
 };
 
@@ -42,14 +31,6 @@ export const selectPostsByUser = (owner) => {
       owner,
     ])
     .then((res) => {
-      console.log("MODEL CHECKPOINT", res.rows);
       return res.rows;
     });
-};
-
-// TBC
-export const selectPostsByUserFriends = () => {
-  return db.query(``).then((res) => {
-    return res;
-  });
 };

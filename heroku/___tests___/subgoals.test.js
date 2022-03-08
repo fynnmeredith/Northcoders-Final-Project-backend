@@ -326,63 +326,18 @@ describe("/api/subgoals/:subgoal_id", function () {
             });
         });
     });
-    // describe("DELETE", () => {
-    //   test("successfully deletes goal when valid goal id is entered", () => {
-    //     return request(app)
-    //       .delete("/api/goals/3")
-    //       .expect(204)
-    //       .then(() => {
-    //         return checkGoalExists(3);
-    //       })
-    //       .then((doesGoalExist: Boolean) => {
-    //         expect(doesGoalExist).toBe(false);
-    //       });
-    //   });
-    //   test("returns error when invalid goal_id is input", () => {
-    //     return request(app)
-    //       .delete("/api/goals/three")
-    //       .expect(400)
-    //       .then((res) => {
-    //         expect(res.body.message).toBe("Bad request");
-    //       });
-    //   });
-    //   test("returns error when non-existent goal_id is input", () => {
-    //     return request(app)
-    //       .delete("/api/goals/9999")
-    //       .expect(404)
-    //       .then((res) => {
-    //         expect(res.body.message).toBe("Goal not found");
-    //       });
-    //   });
-    // });
-});
-// describe("/api/subgoals/:subgoal_id/details", () => {
-//   describe("PATCH", () => {
-//     test("patches successfully when valid subgoal_id and complete patch object are entered", () => {});
-//     test("patches successfully when valid subgoal_id and minimal patch object are entered", () => {});
-//     test("returns error when invalid subgoal_id is entered", () => {});
-//     test("returns error when non-existent subgoal_id is entered", () => {});
-//     test("returns error when patch object doesn't any valid keys", () => {});
-//     test("returns error when objective value is an empty string", () => {});
-//     test("returns error when start date is not a valid date", () => {});
-//     test("returns error when end date is not a valid date", () => {});
-//     test("returns error when start date is set after end date", () => {});
-//     test("returns error when end date is set before start date", () => {});
-//     test("patches successfully when both start date and end date are changed to be an entirely different range to previously", () => {});
-//     test("returns error if target value is not a number", () => {});
-//   });
-// });
-describe("/api/subgoals/:subgoal_id/status", function () {
-    describe("PATCH", function () {
-        test("patches successfully when valid subgoal_id and patch object are entered", function () {
-            return supertest_1["default"](app_1.app)
-                .patch("/api/subgoals/7/status")
-                .send({ status: "completed", date: new Date(2022, 1, 23) })
-                .expect(200)
-                .then(function (res) {
-                expect(res.body.subgoal.subgoal_id).toBe(7);
-                expect(res.body.subgoal.status).toBe("completed");
-                expect(res.body.subgoal.finish_date).toBe("2022-02-23T00:00:00.000Z");
+    describe("/api/subgoals/:subgoal_id/status", function () {
+        describe("PATCH", function () {
+            test("patches successfully when valid subgoal_id and patch object are entered", function () {
+                return supertest_1["default"](app_1.app)
+                    .patch("/api/subgoals/7/status")
+                    .send({ status: "completed", date: new Date(2022, 1, 23) })
+                    .expect(200)
+                    .then(function (res) {
+                    expect(res.body.subgoal.subgoal_id).toBe(7);
+                    expect(res.body.subgoal.status).toBe("completed");
+                    expect(res.body.subgoal.finish_date).toBe("2022-02-23T00:00:00.000Z");
+                });
             });
         });
         test("returns error when invalid subgoal_id is entered", function () {

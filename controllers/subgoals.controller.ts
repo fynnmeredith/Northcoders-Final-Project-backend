@@ -1,9 +1,6 @@
-import e from "cors";
 import {
   insertSubgoal,
-  deleteSubgoalFrom,
   selectSubgoalBySubgoalId,
-  updateSubgoalDetails,
   updateSubgoalStatus,
   updateSubgoalProgress,
   selectSubgoalsByGoalId,
@@ -68,26 +65,6 @@ const postSubgoal = (req, res, next) => {
   }
 };
 
-const deleteSubgoal = (req, res, next) => {
-  const { subgoal_id } = req.params;
-
-  if (!Number.isInteger(parseInt(subgoal_id))) {
-    next({ status: 400, message: "Bad request" });
-  } else {
-    return checkSubgoalExists(subgoal_id)
-      .then((doesSubgoalExist: Boolean) => {
-        if (!doesSubgoalExist) {
-          return Promise.reject({ status: 404, message: "Subgoal not found" });
-        }
-        return deleteSubgoalFrom(subgoal_id);
-      })
-      .then(() => {
-        res.status(204).send();
-      })
-      .catch(next);
-  }
-};
-
 const getSubgoalBySubgoalId = (req, res, next) => {
   const { subgoal_id } = req.params;
 
@@ -101,8 +78,6 @@ const getSubgoalBySubgoalId = (req, res, next) => {
       .catch(next);
   }
 };
-
-const patchSubgoalDetails = (req, res, next) => {};
 
 const patchSubgoalStatus = (req, res, next) => {
   const { subgoal_id } = req.params;
@@ -263,9 +238,7 @@ const getSubgoalsByUser = (req, res, next) => {
 export {
   postSubgoal,
   getSubgoalsByGoalId,
-  deleteSubgoal,
   getSubgoalBySubgoalId,
-  patchSubgoalDetails,
   patchSubgoalStatus,
   patchSubgoalProgress,
   getSubgoalsByUser,

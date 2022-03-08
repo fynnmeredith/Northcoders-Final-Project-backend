@@ -42,14 +42,6 @@ const insertSubgoal = (
   });
 };
 
-const deleteSubgoalFrom = (subgoal_id: number) => {
-  return db.query(
-    `DELETE FROM subgoals
-      WHERE subgoal_id = $1;`,
-    [subgoal_id]
-  );
-};
-
 const selectSubgoalBySubgoalId = (subgoal_id: number) => {
   return db
     .query(
@@ -64,8 +56,6 @@ const selectSubgoalBySubgoalId = (subgoal_id: number) => {
       return res.rows[0];
     });
 };
-
-const updateSubgoalDetails = () => {};
 
 const updateSubgoalStatus = (
   subgoal_id: number,
@@ -176,9 +166,7 @@ const selectSubgoalsByUser = (
 
 export {
   insertSubgoal,
-  deleteSubgoalFrom,
   selectSubgoalBySubgoalId,
-  updateSubgoalDetails,
   updateSubgoalStatus,
   updateSubgoalProgress,
   selectSubgoalsByGoalId,

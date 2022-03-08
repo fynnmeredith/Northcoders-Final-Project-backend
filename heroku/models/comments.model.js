@@ -12,7 +12,6 @@ exports.insertComment = function (post_id, message, owner, datetime) {
     return connection_1.db
         .query("INSERT INTO comments (post_id,message,owner,datetime) VALUES ($1,$2,$3,$4) RETURNING *;", [post_id, message, owner, datetime])
         .then(function (res) {
-        console.log(res.rows);
         return res.rows;
     });
 };
@@ -22,7 +21,6 @@ exports.deleteCommentFromPost = function (comment_id) {
         comment_id,
     ])
         .then(function (res) {
-        console.log(res.rows);
         return res.rows;
     });
 };

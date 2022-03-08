@@ -7,9 +7,6 @@ var express_1 = __importDefault(require("express"));
 var subgoals_controller_1 = require("../controllers/subgoals.controller");
 var subgoalsRouter = express_1["default"].Router();
 exports.subgoalsRouter = subgoalsRouter;
-subgoalsRouter
-    .route("/:subgoal_id")["delete"](subgoals_controller_1.deleteSubgoal)
-    .get(subgoals_controller_1.getSubgoalBySubgoalId);
-subgoalsRouter.patch("/:subgoal_id/details", subgoals_controller_1.patchSubgoalDetails);
+subgoalsRouter.route("/:subgoal_id").get(subgoals_controller_1.getSubgoalBySubgoalId);
 subgoalsRouter.patch("/:subgoal_id/status", subgoals_controller_1.patchSubgoalStatus);
 subgoalsRouter.patch("/:subgoal_id/progress", subgoals_controller_1.patchSubgoalProgress);

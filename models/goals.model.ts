@@ -42,14 +42,6 @@ const insertGoal = (
   });
 };
 
-const deleteGoalFrom = (goal_id: number) => {
-  return db.query(
-    `DELETE FROM goals
-      WHERE goal_id = $1;`,
-    [goal_id]
-  );
-};
-
 const selectGoalByGoalId = (goal_id: number) => {
   return db
     .query(
@@ -64,8 +56,6 @@ const selectGoalByGoalId = (goal_id: number) => {
       return res.rows[0];
     });
 };
-
-const updateGoalDetails = () => {};
 
 const updateGoalStatus = (
   goal_id: number,
@@ -146,9 +136,7 @@ const selectGoalsByUser = (
 
 export {
   insertGoal,
-  deleteGoalFrom,
   selectGoalByGoalId,
-  updateGoalDetails,
   updateGoalStatus,
   updateGoalProgress,
   selectGoalsByUser,

@@ -1,4 +1,3 @@
-import { db } from "../db/connection";
 import * as testData from "../db/data/test-data/index";
 import { seed } from "../db/seeds/seed";
 import { app } from "../app";

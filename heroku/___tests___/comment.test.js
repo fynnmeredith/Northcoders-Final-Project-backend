@@ -18,26 +18,6 @@ beforeEach(function () { return seed_1.seed(testData); });
 describe("/api/comments Post new comment", function () {
     test("successfully posts a new social media comment when valid body is entered", function () { });
 });
-// return request(app)
-//       .post("/api/post")
-//       .send({
-//         associated_data_type: "goal",
-//         associated_id: "1",
-//         owner: "jeff",
-//         datetime: new Date(),
-//         message: "jeff test post, im so happy to be running",
-//       })
-//       .expect(200)
-//       .then((res) => {
-//         expect(res.body.post).toBeInstanceOf(Object);
-//         expect(res.body.post).toMatchObject({
-//           associated_data_type: expect.any(String),
-//           associated_id: expect.any(String),
-//           owner: expect.any(String),
-//           datetime: expect.any(String),
-//           message: expect.any(String),
-//         });
-//       });
 describe("/api/comments gets all comments for a post", function () {
     test("successfully gets comments when valid id is entered", function () {
         return supertest_1["default"](app_1.app)

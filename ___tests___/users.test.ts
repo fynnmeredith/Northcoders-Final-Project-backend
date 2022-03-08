@@ -1,4 +1,3 @@
-import { db } from "../db/connection";
 import * as testData from "../db/data/test-data/index";
 import { seed } from "../db/seeds/seed";
 import { app } from "../app";
@@ -66,7 +65,7 @@ describe("/api/users GET all users", () => {
         });
       });
   });
-  test("Search query with je", () => {
+  test("Search query with empty string", () => {
     return request(app)
       .get("/api/users?search=")
       .expect(200)
@@ -132,8 +131,8 @@ describe("/api/users POST USER", () => {
         expect(res.body.message).toBe("Bad request, please submit a username");
       });
   });
+});
 
-//TBC IF PROFILE IMG URL IS STORED VIA AUTHENTICATION
 describe("/api/users patch user profile works", () => {
   test("patch user profile works, without avatar_url", () => {
     return request(app)
@@ -201,42 +200,6 @@ describe("/api/users patch user profile works", () => {
       .then((res) => {
         expect(res.body.message).toBe("Bad request");
       });
-  });
-});
-
-//out of scope for now
-describe.skip("/api/users Delete User", () => {
-  test("Delete user profile works", () => {
-    return request(app)
-      .delete("/api/users")
-      .send({ username: "jeff" })
-      .expect(200)
-      .then((res) => {
-        expect(res.body.user[0]).toBeInstanceOf(Object);
-        expect(res.body.user[0]).toMatchObject({
-          username: expect.any(String),
-          profile: expect.any(String),
-        });
-      });
-  });
-  test("Delete user profile request with non-existent user throws error", () => {});
-  test("Delete user profile request with missing keys throws error", () => {});
-});
-
-describe("/api/user/:username", () => {
-  describe("GET user by username", () => {
-    test("Get user by username works", () => {
-      return request(app)
-        .get("/api/users/jeff")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.user[0]).toBeInstanceOf(Object);
-          expect(res.body.user[0]).toMatchObject({
-            username: "jeff",
-            profile: "Constant striver",
-          });
-        });
-    });
   });
 });
 

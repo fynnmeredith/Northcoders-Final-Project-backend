@@ -1,12 +1,9 @@
-import { Console } from "console";
 import {
   selectUsers,
   insertUser,
   modifyUser,
   selectUser,
 } from "../models/users.model";
-
-import { requestKeyCheck } from "../utils/misc";
 
 export const getUsers = (req, res, next) => {
   const searchTerm = req.query.search;
@@ -41,7 +38,6 @@ export const postUser = (req, res, next) => {
       res.status(200).send({ user: user });
     })
     .catch((err) => {
-      console.log(err);
       if (err.code === "23505") {
         next({ status: 406, message: "Username already taken" });
       } else {
@@ -102,20 +98,6 @@ export const patchUser = (req, res, next) => {
     }
   }
 };
-
-// DELETE USER TBC
-// export const deleteUser = (req, res, next) => {
-//   const { username } = req.body;
-
-//   return deleteUserModel(username)
-//     .then((user) => {
-//       res.status(200).send({ user });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       next(err);
-//     });
-// };
 
 export const getUser = (req, res, next) => {
   const { username } = req.params;

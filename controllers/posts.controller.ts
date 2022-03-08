@@ -1,9 +1,4 @@
-import {
-  insertPost,
-  removePost,
-  selectPostsByUser,
-  selectPostsByUserFriends,
-} from "../models/posts.model";
+import { insertPost, selectPostsByUser } from "../models/posts.model";
 
 import {
   checkGoalExists,
@@ -87,20 +82,6 @@ export const postPost = (req, res, next) => {
       res.status(200).send({ post });
     })
     .catch((err) => {
-      console.log(err);
-      next(err);
-    });
-};
-
-// TBC
-export const deletePost = (req, res, next) => {
-  const { post_id } = req.body;
-  return removePost(post_id)
-    .then((post) => {
-      res.status(200).send({ post });
-    })
-    .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
@@ -123,20 +104,6 @@ export const getPostsByUser = (req, res, next) => {
       res.status(200).send({ posts });
     })
     .catch((err) => {
-      console.log(err);
-      next(err);
-    });
-};
-
-// TBC
-export const getPostsByUserFriends = (req, res, next) => {
-  // const { owner } = req.body;
-  return selectPostsByUserFriends()
-    .then((posts) => {
-      res.status(200).send({ posts });
-    })
-    .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
