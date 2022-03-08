@@ -20,7 +20,6 @@ app.use(function (req, res, next) {
     if (req.body.date) {
         req.body.date = new Date(req.body.date);
     }
-    console.log(req.body);
     next();
 });
 app.use("/api", api_routers_1.apiRouter);
@@ -36,6 +35,5 @@ app.use(function (err, req, res, next) {
     }
 });
 app.use(function (err, req, res, next) {
-    console.log(err);
     res.status(500).send({ message: "Something went wrong" });
 });

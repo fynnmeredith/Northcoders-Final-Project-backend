@@ -5,6 +5,7 @@ var checkExists_1 = require("../utils/checkExists");
 var misc_1 = require("../utils/misc");
 exports.postPost = function (req, res, next) {
     var _a = req.body, associated_data_type = _a.associated_data_type, associated_id = _a.associated_id, owner = _a.owner, datetime = _a.datetime, message = _a.message, progress_point = _a.progress_point;
+
     return checkExists_1.checkUserExists(owner)
         .then(function (res) {
         if (res === false) {
@@ -12,7 +13,7 @@ exports.postPost = function (req, res, next) {
                 status: 400,
                 message: "Bad request"
             };
-        }
+        };
     })
         .then(function () {
         switch (associated_data_type) {
@@ -52,6 +53,7 @@ exports.postPost = function (req, res, next) {
         .then(function (post) {
         res.status(200).send({ post: post });
     })["catch"](function (err) {
+
         next(err);
     });
 };

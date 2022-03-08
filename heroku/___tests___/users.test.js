@@ -140,6 +140,7 @@ describe("/api/users POST USER", function () {
         });
     });
 });
+
 describe("/api/users patch user profile works", function () {
     test("patch user profile works, without avatar_url", function () {
         return supertest_1["default"](app_1.app)
